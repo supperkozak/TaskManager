@@ -1,7 +1,6 @@
 package com.example.taskmanager.Activity;
 
 import android.content.Intent;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,7 +14,6 @@ import com.example.taskmanager.R;
 import com.example.taskmanager.Task.Task;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static com.example.taskmanager.R.id.listView;
 
@@ -23,9 +21,9 @@ import static com.example.taskmanager.R.id.listView;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     Button mButtonAdd;
     ListView mlvListTask;
-    ListViewAdapterTask adapter;
-    ArrayList listTask;
-    private static final String KEY_SAVE_STATE = "state";
+    ListViewAdapterTask mAdapter;
+    ArrayList mListTask;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,20 +31,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState != null){
-            listTask = savedInstanceState.getParcelableArrayList(KEY_SAVE_STATE);
+            mListTask = savedInstanceState.getParcelableArrayList(Constant.KEY_SAVE_STATE);
         } else {
-            listTask = new ArrayList<Task>();
+            mListTask = new ArrayList<Task>();
         }
-
         initView();
         initData();
-
     }
 
     private void initData() {
-        // listTask = new ArrayList<Task>();
-        adapter = new ListViewAdapterTask(listTask, this);
-        mlvListTask.setAdapter(adapter);
+        mAdapter = new ListViewAdapterTask(mListTask, this);
+        mlvListTask.setAdapter(mAdapter);
     }
 
 
@@ -54,16 +49,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mButtonAdd = (Button) findViewById(R.id.button);
         mlvListTask = (ListView) findViewById(listView);
         mButtonAdd.setOnClickListener(this);
-
-
     }
 
     @Override
     public void onClick(View v) {
         startActivityForResult(new Intent(this, AddTaskActivity.class), Constant.REQUEST_STRING);
-
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -74,8 +65,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             switch (requestCode) {
                 case Constant.REQUEST_STRING:
                     Task mTask = data.getParcelableExtra(Task.class.getCanonicalName());
-                    listTask.add(mTask);
-                    adapter.notifyDataSetChanged();
+                    mListTask.add(mTask);
+                    mAdapter.notifyDataSetChanged();
                     break;
             }
 
@@ -87,6 +78,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(KEY_SAVE_STATE, listTask);
+        outState.putParcelableArrayList(Constant.KEY_SAVE_STATE, mListTask);
     }
 }

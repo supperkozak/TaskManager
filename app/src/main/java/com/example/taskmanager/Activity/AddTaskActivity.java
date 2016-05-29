@@ -12,10 +12,10 @@ import com.example.taskmanager.Task.Task;
 
 
 public class AddTaskActivity extends AppCompatActivity implements View.OnClickListener {
-    EditText edTaskName;
-    EditText edTaskComment;
-    Button btnSave;
-    Button btnExit;
+    EditText mEdTaskName;
+    EditText mEdTaskComment;
+    Button mBtnSave;
+    Button mBtnExit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,19 +25,19 @@ public class AddTaskActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void initData() {
-        edTaskName = (EditText) findViewById(R.id.edTaskName);
-        edTaskComment = (EditText) findViewById(R.id.edTaskComment);
-        btnSave = (Button) findViewById(R.id.btnSave);
-        btnExit = (Button) findViewById(R.id.btnExit);
-        btnSave.setOnClickListener(this);
-        btnExit.setOnClickListener(this);
+        mEdTaskName = (EditText) findViewById(R.id.edTaskName);
+        mEdTaskComment = (EditText) findViewById(R.id.edTaskComment);
+        mBtnSave = (Button) findViewById(R.id.btnSave);
+        mBtnExit = (Button) findViewById(R.id.btnExit);
+        mBtnSave.setOnClickListener(this);
+        mBtnExit.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btnSave:
-                Task mTask = new Task(edTaskName.getText().toString(),edTaskComment.getText().toString());
+                Task mTask = new Task(mEdTaskName.getText().toString(), mEdTaskComment.getText().toString());
 
                 Intent intent = new Intent();
                 intent.putExtra(Task.class.getCanonicalName(),mTask);

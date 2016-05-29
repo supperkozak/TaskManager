@@ -18,13 +18,13 @@ import java.util.List;
 public class ListViewAdapterTask extends BaseAdapter {
     List<Task> mListTask;
     Context context;
-    LayoutInflater lInflater;
+    LayoutInflater mlInflater;
 
     public ListViewAdapterTask(List<Task> mListTask, Context context) {
         this.mListTask = mListTask;
         this.context = context;
 
-        lInflater = (LayoutInflater) this.context
+        mlInflater = (LayoutInflater) this.context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
     }
@@ -54,7 +54,7 @@ public class ListViewAdapterTask extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
         if (view == null) {
-            view = lInflater.inflate(R.layout.task_item, parent, false);
+            view = mlInflater.inflate(R.layout.task_item, parent, false);
         }
 
         TextView tvNameTask = (TextView) view.findViewById(R.id.tvNameTask);
