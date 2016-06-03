@@ -8,14 +8,17 @@
         android:layout_height="match_parent"
         android:id="@+id/listView"
         android:layout_centerHorizontal="true"
-        android:layout_above="@+id/button"
-        />
+        android:longClickable="true"
+        android:layout_above="@+id/add_button"/>
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:text="@string/button_add"
-        android:id="@+id/button"
+        android:id="@+id/add_button"
         android:layout_alignParentBottom="true"
-        />
+        android:background="@drawable/button_background"
+        android:textColor="@color/text_color"
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true"/>
 </RelativeLayout>

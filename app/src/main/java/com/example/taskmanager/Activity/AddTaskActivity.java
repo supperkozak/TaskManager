@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.taskmanager.R;
-import com.example.taskmanager.Task.Task;
+import com.example.taskmanager.Model.Task;
 
 
 public class AddTaskActivity extends AppCompatActivity implements View.OnClickListener {
@@ -17,11 +17,20 @@ public class AddTaskActivity extends AppCompatActivity implements View.OnClickLi
     Button mBtnSave;
     Button mBtnExit;
 
+    Task mTask;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
-        initData();
+        mTask = getIntent().getParcelableExtra(Task.class.getCanonicalName());
+        if (mTask != null){
+            editData();
+        } else {
+            initData();
+        }
+
+
     }
 
     private void initData() {
@@ -33,11 +42,28 @@ public class AddTaskActivity extends AppCompatActivity implements View.OnClickLi
         mBtnExit.setOnClickListener(this);
     }
 
+    private void editData() {
+        mEdTaskName = (EditText) findViewById(R.id.edTaskName);
+        mEdTaskName.setText(mTask.getTaskName());
+        mEdTaskComment = (EditText) findViewById(R.id.edTaskComment);
+        mEdTaskComment.setText(mTask.getTaskComment());
+        mBtnSave = (Button) findViewById(R.id.btnSave);
+        mBtnExit = (Button) findViewById(R.id.btnExit);
+        mBtnSave.setOnClickListener(this);
+        mBtnExit.setOnClickListener(this);
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btnSave:
-                Task mTask = new Task(mEdTaskName.getText().toString(), mEdTaskComment.getText().toString());
+
+                if (mTask != null){
+                    mTask.setTaskName(mEdTaskName.getText().toString());
+                    mTask.setTaskComment(mEdTaskComment.getText().toString());
+                } else {
+                    mTask = new Task(mEdTaskName.getText().toString(), mEdTaskComment.getText().toString());
+                }
 
                 Intent intent = new Intent();
                 intent.putExtra(Task.class.getCanonicalName(),mTask);

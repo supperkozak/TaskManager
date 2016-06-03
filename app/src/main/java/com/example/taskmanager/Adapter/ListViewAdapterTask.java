@@ -8,26 +8,27 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.taskmanager.R;
-import com.example.taskmanager.Task.Task;
+import com.example.taskmanager.Model.Task;
+
 
 import java.util.List;
 
 /**
  * Created by Тарас on 28.05.2016.
  */
-public class ListViewAdapterTask extends BaseAdapter {
+public class ListViewAdapterTask extends BaseAdapter  {
     List<Task> mListTask;
-    Context context;
+    Context mContext;
     LayoutInflater mlInflater;
 
-    public ListViewAdapterTask(List<Task> mListTask, Context context) {
-        this.mListTask = mListTask;
-        this.context = context;
+    public ListViewAdapterTask(List<Task> listTask, Context context) {
+        mListTask = listTask;
+        mContext = context;
 
-        mlInflater = (LayoutInflater) this.context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
+        mlInflater = (LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
+
+
 
     @Override
     public void notifyDataSetChanged() {
@@ -59,10 +60,18 @@ public class ListViewAdapterTask extends BaseAdapter {
 
         TextView tvNameTask = (TextView) view.findViewById(R.id.tvNameTask);
         TextView tvCommentTask= (TextView) view.findViewById(R.id.tvCommentTask);
-        tvNameTask.setText(mListTask.get(position).getmTaskName());
-        tvCommentTask.setText(mListTask.get(position).getmTaskComment());
+        TextView tvTimeTaskStart = (TextView) view.findViewById(R.id.tvTimeTaskStart);
+        TextView tvTimeTaskFinish = (TextView) view.findViewById(R.id.tvTimeTaskFinish);
+
+
+        tvNameTask.setText(mListTask.get(position).getTaskName());
+        tvCommentTask.setText(mListTask.get(position).getTaskComment());
+        tvTimeTaskStart.setText(mListTask.get(position).getTimeTaskStart());
+        tvTimeTaskFinish.setText(mListTask.get(position).getTimeTaskFinish());
+
 
         return view;
     }
+
 }
 

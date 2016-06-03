@@ -5,6 +5,13 @@
     <string name="task_comment">Завдання</string>
     <string name="button_save">Зберегти</string>
     <string name="button_exit">Вихід</string>
+    <string name="title_add_task">Додати завдання</string>
+    <string name="tvTimeTaskStart">00.00.0000 00:00.</string>
+    <string name="tvTimeTaskFinish">00.00.0000 00:00.</string>
+    <string name="snack_start">Завдання розпочато о</string>
+    <string name="snack_finish">Завдання завершене</string>
+    <string name="snack_resume">Завдання вже завершено</string>
+    <string name="snack_resume_yes">Так</string>
 
 
 </resources>
