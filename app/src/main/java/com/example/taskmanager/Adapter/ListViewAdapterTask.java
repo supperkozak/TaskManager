@@ -1,4 +1,4 @@
-package com.example.taskmanager.Adapter;
+package com.example.taskmanager.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,10 +8,11 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.taskmanager.R;
-import com.example.taskmanager.Model.Task;
+import com.example.taskmanager.model.Task;
 
 
 import java.util.List;
+
 
 /**
  * Created by Тарас on 28.05.2016.
@@ -30,6 +31,15 @@ public class ListViewAdapterTask extends BaseAdapter  {
 
 
 
+    static class ViewHolder {
+        TextView tvNameTask;
+        TextView tvCommentTask;
+        TextView tvTimeTaskStart;
+        TextView tvTimeTaskFinish;
+
+        View view;
+    }
+
     @Override
     public void notifyDataSetChanged() {
         super.notifyDataSetChanged();
@@ -37,6 +47,7 @@ public class ListViewAdapterTask extends BaseAdapter  {
 
     @Override
     public int getCount() {
+
         return mListTask.size();
     }
 
@@ -53,24 +64,43 @@ public class ListViewAdapterTask extends BaseAdapter  {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = convertView;
-        if (view == null) {
-            view = mlInflater.inflate(R.layout.task_item, parent, false);
+
+        ViewHolder viewHolder;
+
+        if (convertView == null){
+            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            viewHolder = new ViewHolder();
+            convertView = inflater.inflate(R.layout.task_item, parent, false);
+
+            viewHolder.tvNameTask = (TextView) convertView.findViewById(R.id.tvNameTask);
+            viewHolder.tvCommentTask = (TextView) convertView.findViewById(R.id.tvCommentTask);
+            viewHolder.tvTimeTaskStart = (TextView) convertView.findViewById(R.id.tvTimeTaskStart);
+            viewHolder.tvTimeTaskFinish = (TextView) convertView.findViewById(R.id.tvTimeTaskFinish);
+            viewHolder.view = convertView.findViewById(R.id.item_container);
+
+            convertView.setTag(viewHolder);
+
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        TextView tvNameTask = (TextView) view.findViewById(R.id.tvNameTask);
-        TextView tvCommentTask= (TextView) view.findViewById(R.id.tvCommentTask);
-        TextView tvTimeTaskStart = (TextView) view.findViewById(R.id.tvTimeTaskStart);
-        TextView tvTimeTaskFinish = (TextView) view.findViewById(R.id.tvTimeTaskFinish);
+
+        viewHolder.tvNameTask.setText(mListTask.get(position).getTaskName());
+        viewHolder.tvCommentTask.setText(mListTask.get(position).getTaskComment());
+        viewHolder.tvTimeTaskStart.setText(mListTask.get(position).getTimeTaskStart());
+        viewHolder.tvTimeTaskFinish.setText(mListTask.get(position).getTimeTaskFinish());
+        viewHolder.view.setBackgroundColor(mContext.getResources().getColor(R.color.notStart));
+
+        if (mListTask.get(position).getTimeTaskStart() != null) {
+            viewHolder.view.setBackgroundColor(mContext.getResources().getColor(R.color.onStart));
+        }
+        if (mListTask.get(position).getTimeTaskFinish() != null) {
+            viewHolder.view.setBackgroundColor(mContext.getResources().getColor(R.color.onFinish));
+        }
 
 
-        tvNameTask.setText(mListTask.get(position).getTaskName());
-        tvCommentTask.setText(mListTask.get(position).getTaskComment());
-        tvTimeTaskStart.setText(mListTask.get(position).getTimeTaskStart());
-        tvTimeTaskFinish.setText(mListTask.get(position).getTimeTaskFinish());
+        return convertView;
 
-
-        return view;
     }
 
 }

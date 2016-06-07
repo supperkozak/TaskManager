@@ -1,10 +1,7 @@
-package com.example.taskmanager.Model;
+package com.example.taskmanager.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import java.sql.Time;
-import java.text.SimpleDateFormat;
 
 /**
  * Created by Тарас on 28.05.2016.
@@ -14,7 +11,8 @@ public class Task implements Parcelable {
     private String mTaskComment;
     private String mTimeTaskStart;
     private String mTimeTaskFinish;
-    private Long mTimeForToDo;
+    private String mTimeForToDo;
+
 
 
     public Task() {
@@ -31,6 +29,7 @@ public class Task implements Parcelable {
         mTaskComment = in.readString();
         mTimeTaskStart = in.readString();
         mTimeTaskFinish = in.readString();
+
 
     }
 
@@ -58,6 +57,7 @@ public class Task implements Parcelable {
         dest.writeString(mTaskComment);
         dest.writeString(mTimeTaskStart);
         dest.writeString(mTimeTaskFinish);
+
 
     }
 
@@ -103,12 +103,14 @@ public class Task implements Parcelable {
         mTimeTaskFinish = timeTaskFinish;
     }
 
-    public Long getTimeForToDo() {
+    public String getTimeForToDo() {
         return mTimeForToDo;
     }
 
-    public void setTimeForToDo(Long timeForToDo) {
+    public void setTimeForToDo(String timeForToDo) {
         mTimeForToDo = timeForToDo;
     }
+
+
 
 }

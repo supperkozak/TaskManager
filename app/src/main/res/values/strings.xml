@@ -12,6 +12,8 @@
     <string name="snack_finish">Завдання завершене</string>
     <string name="snack_resume">Завдання вже завершено</string>
     <string name="snack_resume_yes">Так</string>
+    <string name="add_tasks">Додати багато завданнь</string>
+    <string name="remove_tasks">Видалити всі зардання</string>
 
 
 </resources>

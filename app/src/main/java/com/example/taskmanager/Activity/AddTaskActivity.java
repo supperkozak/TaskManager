@@ -1,4 +1,4 @@
-package com.example.taskmanager.Activity;
+package com.example.taskmanager.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,8 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.taskmanager.R;
-import com.example.taskmanager.Model.Task;
-
+import com.example.taskmanager.model.Task;
 
 public class AddTaskActivity extends AppCompatActivity implements View.OnClickListener {
     EditText mEdTaskName;
@@ -29,8 +28,6 @@ public class AddTaskActivity extends AppCompatActivity implements View.OnClickLi
         } else {
             initData();
         }
-
-
     }
 
     private void initData() {
@@ -61,6 +58,7 @@ public class AddTaskActivity extends AppCompatActivity implements View.OnClickLi
                 if (mTask != null){
                     mTask.setTaskName(mEdTaskName.getText().toString());
                     mTask.setTaskComment(mEdTaskComment.getText().toString());
+
                 } else {
                     mTask = new Task(mEdTaskName.getText().toString(), mEdTaskComment.getText().toString());
                 }
