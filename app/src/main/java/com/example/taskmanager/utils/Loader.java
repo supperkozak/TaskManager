@@ -2,6 +2,7 @@ package com.example.taskmanager.utils;
 
 import android.content.Context;
 
+import com.example.taskmanager.activity.MainActivity;
 import com.example.taskmanager.interfases.LoadCompleter;
 import com.example.taskmanager.model.Task;
 
@@ -12,23 +13,24 @@ import java.util.ArrayList;
  */
 public class Loader implements Runnable {
     Thread thread;
-    LoadCompleter loadComplete;
+    LoadCompleter loadCompleter;
     SharedPreference sharedPreference;
     ArrayList<Task> mListTask;
     Context context;
-
-    public Loader(Context context, LoadCompleter loadComplete) {
+    // Конструктор
+    public Loader(Context context, LoadCompleter loadCompleter) {
         sharedPreference = new SharedPreference();
-        this.loadComplete = loadComplete;
+        this.loadCompleter = loadCompleter;
         this.context = context;
-
-        thread = new Thread( this, "Load sharedPreference");
+        thread = new Thread(this, "Load SharedPreferences");
         thread.start();
-}
+    }
 
-public void run() {
-        mListTask = sharedPreference.getJson(context);
-        loadComplete.loadCallback(mListTask);
-        }
+    // Обязательный метод для интерфейса Runnable
+    public void run() {
+        mListTask = sharedPreference.getTasksFromSharedPreferences(context);
+        loadCompleter.loadCallback(mListTask);
+
+    }
 }
 

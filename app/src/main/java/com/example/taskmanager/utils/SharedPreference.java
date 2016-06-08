@@ -58,7 +58,7 @@ public class SharedPreference {
         editor.apply();
     }
 
-    public ArrayList<Task> getJson(Context context) {
+    public ArrayList<Task> getTasksFromSharedPreferences(Context context) {
         SharedPreferences settings;
         String json;
         ArrayList<Task> tasks = null;
@@ -75,13 +75,13 @@ public class SharedPreference {
                     tasks = new ArrayList<>();
                     for (int i = 0; i < jsonArray.length(); i++) {
                         task = new Task();
-                        JSONObject pdtObj = jsonArray.getJSONObject(i);
+                        JSONObject taskJSON = jsonArray.getJSONObject(i);
 
-                        task.setTaskName(pdtObj.optString("TaskName"));
-                        task.setTaskComment(pdtObj.optString("TaskComment"));
-                        task.setTimeTaskStart(pdtObj.optString("TimeTaskStart"));
-                        task.setTimeTaskFinish(pdtObj.optString("TimeTaskFinish"));
-                        task.setTimeForToDo(pdtObj.optString("TimeForToDo"));
+                        task.setTaskName(taskJSON.optString("TaskName"));
+                        task.setTaskComment(taskJSON.optString("TaskComment"));
+                        task.setTimeTaskStart(taskJSON.optString("TimeTaskStart"));
+                        task.setTimeTaskFinish(taskJSON.optString("TimeTaskFinish"));
+                        task.setTimeForToDo(taskJSON.optString("TimeForToDo"));
 
                         tasks.add(task);
                     }

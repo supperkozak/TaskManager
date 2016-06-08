@@ -13,10 +13,6 @@ import com.example.taskmanager.model.Task;
 
 import java.util.List;
 
-
-/**
- * Created by Тарас on 28.05.2016.
- */
 public class ListViewAdapterTask extends BaseAdapter  {
     List<Task> mListTask;
     Context mContext;
@@ -28,8 +24,6 @@ public class ListViewAdapterTask extends BaseAdapter  {
 
         mlInflater = (LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
-
-
 
     static class ViewHolder {
         TextView tvNameTask;
@@ -84,24 +78,19 @@ public class ListViewAdapterTask extends BaseAdapter  {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-
         viewHolder.tvNameTask.setText(mListTask.get(position).getTaskName());
         viewHolder.tvCommentTask.setText(mListTask.get(position).getTaskComment());
         viewHolder.tvTimeTaskStart.setText(mListTask.get(position).getTimeTaskStart());
         viewHolder.tvTimeTaskFinish.setText(mListTask.get(position).getTimeTaskFinish());
         viewHolder.view.setBackgroundColor(mContext.getResources().getColor(R.color.notStart));
 
-        if (mListTask.get(position).getTimeTaskStart() != null) {
+        if (mListTask.get(position).getTimeTaskStart() != null && !mListTask.get(position).getTimeTaskStart().isEmpty()) {
             viewHolder.view.setBackgroundColor(mContext.getResources().getColor(R.color.onStart));
         }
-        if (mListTask.get(position).getTimeTaskFinish() != null) {
+        if (mListTask.get(position).getTimeTaskFinish() != null &&!mListTask.get(position).getTimeTaskFinish().isEmpty()) {
             viewHolder.view.setBackgroundColor(mContext.getResources().getColor(R.color.onFinish));
         }
-
-
         return convertView;
-
     }
-
 }
 
