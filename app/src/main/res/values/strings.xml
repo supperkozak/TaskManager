@@ -14,6 +14,8 @@
     <string name="snack_resume_yes">Так</string>
     <string name="add_tasks">Додати багато завданнь</string>
     <string name="remove_tasks">Видалити всі зардання</string>
+    <string name="add_tasks_snack_1">Додано</string>
+    <string name="add_tasks_snack_2">нових завдань</string>
 
 
 </resources>

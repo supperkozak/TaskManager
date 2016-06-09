@@ -3,17 +3,12 @@ package com.example.taskmanager.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by Тарас on 28.05.2016.
- */
 public class Task implements Parcelable {
     private String mTaskName;
     private String mTaskComment;
     private String mTimeTaskStart;
     private String mTimeTaskFinish;
     private String mTimeForToDo;
-
-
 
     public Task() {
     }
@@ -23,13 +18,11 @@ public class Task implements Parcelable {
         mTaskComment = taskComment;
     }
 
-
     protected Task(Parcel in) {
         mTaskName = in.readString();
         mTaskComment = in.readString();
         mTimeTaskStart = in.readString();
         mTimeTaskFinish = in.readString();
-
 
     }
 
@@ -45,7 +38,6 @@ public class Task implements Parcelable {
         }
     };
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -57,7 +49,6 @@ public class Task implements Parcelable {
         dest.writeString(mTaskComment);
         dest.writeString(mTimeTaskStart);
         dest.writeString(mTimeTaskFinish);
-
 
     }
 

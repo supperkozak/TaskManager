@@ -1,7 +1,6 @@
 package com.example.taskmanager.activity;
 
 import android.content.Intent;
-import android.support.annotation.MainThread;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -12,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import android.support.design.widget.Snackbar;
 
 import com.example.taskmanager.adapter.ListViewAdapterTask;
@@ -20,7 +18,7 @@ import com.example.taskmanager.constant.Constant;
 import com.example.taskmanager.R;
 import com.example.taskmanager.interfases.LoadCompleter;
 import com.example.taskmanager.model.Task;
-import com.example.taskmanager.utils.Loader;
+import com.example.taskmanager.utils.LoaderSharedPreferences;
 import com.example.taskmanager.utils.SharedPreference;
 
 import java.text.ParseException;
@@ -31,12 +29,11 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, LoadCompleter {
     Button mButtonAdd;
     ListView mlvListTask;
-    TextView mTextViewTimeTaskStart;
-    TextView mTextViewTimeTaskFinish;
 
     ListViewAdapterTask mAdapter;
     ArrayList <Task> mListTask;
-    SharedPreference sharedPreference;
+
+    private SharedPreference sharedPreference;
 
     int mListEditPosition = -1;
 
@@ -45,35 +42,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (savedInstanceState != null){
+        sharedPreference = new SharedPreference();
+        mListTask = new ArrayList<>();
+        initData();
+
+        LoaderSharedPreferences loader = null;
+        if (savedInstanceState != null) {
             mListTask = savedInstanceState.getParcelableArrayList(Constant.KEY_SAVE_STATE);
         } else {
-            //mListTask = new ArrayList<>();
+            // mListTask = sharedPreference.getTasksFromSharedPreferences(MainActivity.this);
 
-            sharedPreference = new SharedPreference();
 
-            mListTask = sharedPreference.getJson(this);
-
-            Loader loader = new Loader(getApplicationContext(), this);
+            try {
+                loader = new LoaderSharedPreferences(getApplicationContext(), this);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
-        initView();
-        initData();
+        onClickListView();
     }
 
     private void initData() {
+        mButtonAdd = (Button) findViewById(R.id.add_button);
+        mlvListTask = (ListView) findViewById(R.id.listView);
         mAdapter = new ListViewAdapterTask(mListTask, this);
         mlvListTask.setAdapter(mAdapter);
-
     }
 
-    private void initView() {
-        mlvListTask = (ListView) findViewById(R.id.listView);
-        mButtonAdd = (Button) findViewById(R.id.add_button);
-        mTextViewTimeTaskStart = (TextView) findViewById(R.id.tvTimeTaskStart);
-        mTextViewTimeTaskFinish = (TextView) findViewById(R.id.tvTimeTaskFinish);
+    private void onClickListView (){
         mButtonAdd.setOnClickListener(this);
-
         mlvListTask.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 TextView tvmTimeTaskStart = (TextView) v.findViewById(R.id.tvTimeTaskStart);
@@ -82,12 +80,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 SimpleDateFormat sdf = new SimpleDateFormat("MM:dd:yyyy:HH:mm");
                 String currentDateAndTime = sdf.format(new Date());
 
-                if(mListTask.get(position).getTimeTaskStart() == null){
+                if(mListTask.get(position).getTimeTaskStart() == null || mListTask.get(position).getTimeTaskStart().equalsIgnoreCase("")){
                     tvmTimeTaskStart.setText(currentDateAndTime.toString());
                     mListTask.get(position).setTimeTaskStart(tvmTimeTaskStart.getText().toString());
                     Snackbar.make(v, getResources().getString(R.string.snack_start) + " " + mListTask.get(position).getTimeTaskStart(), Snackbar.LENGTH_LONG)
                             .show();
-                }else if(mListTask.get(position).getTimeTaskFinish() == null) {
+                }else if(mListTask.get(position).getTimeTaskFinish() == null||mListTask.get(position).getTimeTaskFinish().equalsIgnoreCase("")) {
                     tvmTimeTaskFinish.setText(currentDateAndTime.toString());
                     mListTask.get(position).setTimeTaskFinish(tvmTimeTaskFinish.getText().toString());
 
@@ -111,14 +109,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 }else{
 
-                    Snackbar.make(v, R.string.snack_resume, Snackbar.LENGTH_LONG).setAction(R.string.snack_resume_yes, null)
+                    Snackbar.make(v, R.string.snack_resume, Snackbar.LENGTH_LONG)
                             .show();
                 }
-
-                mAdapter.notifyDataSetChanged();
                 sharedPreference.saveTasksToSharedPreferences(MainActivity.this, mListTask);
+                mAdapter.notifyDataSetChanged();
             }
-
         });
         mlvListTask.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
@@ -151,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
         if (resultCode == RESULT_OK) {
+            sharedPreference = new SharedPreference();
             switch (requestCode) {
                 case Constant.KEY_ADD_TASK:
                     Task mTask = data.getParcelableExtra(Task.class.getCanonicalName());
@@ -158,15 +155,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         mListTask.add(mTask);
 
                     } else {
+
                         mListTask.set(mListEditPosition, mTask);
                         mListEditPosition = -1;
                     }
-
-                    sharedPreference.saveTasksToSharedPreferences(this, mListTask);
+                    sharedPreference.saveTasksToSharedPreferences(MainActivity.this, mListTask);
                     mAdapter.notifyDataSetChanged();
                     break;
-                }
-
+            }
         } else {
             Snackbar.make(mlvListTask, "Wrong result", Snackbar.LENGTH_LONG).show();
         }
@@ -175,91 +171,87 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
         if(mListTask != null){
             outState.putParcelableArrayList(Constant.KEY_SAVE_STATE, mListTask);
-            sharedPreference.saveTasksToSharedPreferences(this, mListTask);
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        sharedPreference.saveTasksToSharedPreferences(MainActivity.this, mListTask);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.add_tasks:
-                Task task = new Task();
-
-                mListTask.add(task);
-                mAdapter.notifyDataSetChanged();
-
-                int height = calculateHeight(mlvListTask);
-                int screen = mlvListTask.getHeight();
-                mAdapter.notifyDataSetChanged();
-
-                for (int i = 0; i < 3 * (screen / height) - 1; i++) {
-
-                    task.setTaskName("" + i);
-                    mListTask.add(task);
-                    mAdapter.notifyDataSetChanged();
+                double items;
+                int itemsCount;
+                if (mListTask.isEmpty()){
+                    addTask(0);
+                    items = calculateListViewElements() * 3;
+                    itemsCount = (int) Math.ceil(items);
+                    for (int i = 0; i < itemsCount; i++) {
+                        addTask(i + 1);
+                    }
+                } else {
+                    items = calculateListViewElements() * 3;
+                    itemsCount = (int) Math.ceil(items);
+                    for (int i = 0; i < itemsCount; i++) {
+                        addTask(i);
+                    }
                 }
 
-
-                DisplayMetrics dm = new DisplayMetrics();
-                getWindowManager().getDefaultDisplay().getMetrics(dm);
-                mListTask.add(task);
-                mAdapter.notifyDataSetChanged();
-                int heightDisplay = dm.heightPixels;
-
-                int high = mlvListTask.getFirstVisiblePosition();
-                int down = mlvListTask.getLastVisiblePosition();
-
-
-                Snackbar.make(mlvListTask, heightDisplay + " " + high + " " + down, Snackbar.LENGTH_LONG).show();
-
+                Snackbar.make(mlvListTask,getResources().getString(R.string.add_tasks_snack_1) + " " + itemsCount + " " +
+                        getResources().getString(R.string.add_tasks_snack_2), Snackbar.LENGTH_LONG).show();
                 break;
+
             case R.id.remove_tasks:
 
                 sharedPreference.clearSharedPreference(this);
                 mListTask = new ArrayList<>();
                 initData();
                 mAdapter.notifyDataSetChanged();
-
                 break;
-            }
-        return true;
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mListTask != null) {
-
-            sharedPreference.saveTasksToSharedPreferences(MainActivity.this, mListTask);
         }
+        return true;
     }
 
     @Override
     public void loadCallback(ArrayList<Task> listTask) {
         if (listTask == null) {
-            mListTask = new ArrayList<Task>();
+            mListTask = new ArrayList<>();
         } else {
             mListTask = listTask;
         }
-        //initData();
+        initData();
+    }
+    public double calculateListViewElements(){
+        ListViewAdapterTask listAdapter = (ListViewAdapterTask) mlvListTask.getAdapter();
+
+        if (!listAdapter.isEmpty()) {
+            View viewItem = listAdapter.getView(0, null, mlvListTask);
+            viewItem.measure(0, 0);
+            double itemHighDp = viewItem.getMeasuredHeight();
+            double listViewHighPx = mlvListTask.getHeight();
+            DisplayMetrics dm = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(dm);
+            double dpiScreen = dm.densityDpi;
+            double itemHighPx = itemHighDp * (dpiScreen / 160.0);
+
+            return listViewHighPx /(itemHighPx + mlvListTask.getDividerHeight());
+
+        }else {
+            return 0;
+        }
     }
 
-    private int calculateHeight(ListView list) {
-
-        int height = 0;
-
-        for (int i = 0; i < list.getCount(); i++) {
-            View childView = list.getAdapter().getView(i, null, list);
-            childView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-            height += childView.getMeasuredHeight();
-        }
-
-        height += list.getDividerHeight() * list.getCount();
-
-        return height;
+    public void addTask(int i) {
+        Task task = new Task();
+        task.setTaskName("" + i);
+        mListTask.add(task);
+        mAdapter.notifyDataSetChanged();
     }
 }
 

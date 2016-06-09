@@ -71,7 +71,7 @@ public class SharedPreference {
             if (json != null) {
                 JSONArray jsonArray = new JSONArray(json);
 
-                if (jsonArray != null) {
+                if (jsonArray.length() > 0) {
                     tasks = new ArrayList<>();
                     for (int i = 0; i < jsonArray.length(); i++) {
                         task = new Task();
