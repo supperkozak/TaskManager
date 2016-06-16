@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.example.taskmanager.R;
 import com.example.taskmanager.model.Task;
 
-
 import java.util.List;
 
 public class ListViewAdapterTask extends BaseAdapter  {

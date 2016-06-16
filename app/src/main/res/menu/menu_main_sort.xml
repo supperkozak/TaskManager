@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context=".activity.MainActivity">
+
+    <group android:id="@+id/group_sort">
+        <item android:id="@+id/sort_task_by_date_first_yang"
+              android:title="@string/sort_task_by_date_first_yang" />
+        <item android:id="@+id/sort_task_by_date_first_old"
+              android:title="@string/sort_task_by_date_first_old" />
+        <item android:id="@+id/sort_task_by_name_az"
+              android:title="@string/sort_task_by_name_az" />
+        <item android:id="@+id/sort_task_by_name_za"
+              android:title="@string/sort_task_by_name_za" />
+    </group>
+
+</menu>

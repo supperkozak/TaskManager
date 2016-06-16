@@ -2,19 +2,22 @@ package com.example.taskmanager.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.taskmanager.R;
 import com.example.taskmanager.model.Task;
 
-public class AddTaskActivity extends AppCompatActivity implements View.OnClickListener {
+public class AddTaskActivity extends AppCompatActivity {
     EditText mEdTaskName;
     EditText mEdTaskComment;
-    Button mBtnSave;
-    Button mBtnExit;
+    Toolbar mToolbar;
 
     Task mTask;
 
@@ -28,32 +31,40 @@ public class AddTaskActivity extends AppCompatActivity implements View.OnClickLi
         } else {
             initData();
         }
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
     }
 
     private void initData() {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar_add_task);
+        mToolbar.setTitle(R.string.title_add_new_task);
         mEdTaskName = (EditText) findViewById(R.id.edTaskName);
         mEdTaskComment = (EditText) findViewById(R.id.edTaskComment);
-        mBtnSave = (Button) findViewById(R.id.btnSave);
-        mBtnExit = (Button) findViewById(R.id.btnExit);
-        mBtnSave.setOnClickListener(this);
-        mBtnExit.setOnClickListener(this);
+
+
     }
 
     private void editData() {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar_add_task);
+        mToolbar.setTitle(R.string.title_edit_task);
         mEdTaskName = (EditText) findViewById(R.id.edTaskName);
         mEdTaskName.setText(mTask.getTaskName());
         mEdTaskComment = (EditText) findViewById(R.id.edTaskComment);
         mEdTaskComment.setText(mTask.getTaskComment());
-        mBtnSave = (Button) findViewById(R.id.btnSave);
-        mBtnExit = (Button) findViewById(R.id.btnExit);
-        mBtnSave.setOnClickListener(this);
-        mBtnExit.setOnClickListener(this);
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.btnSave:
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_add_task, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.add_tasks_item:
 
                 if (mTask != null){
                     mTask.setTaskName(mEdTaskName.getText().toString());
@@ -68,9 +79,12 @@ public class AddTaskActivity extends AppCompatActivity implements View.OnClickLi
                 setResult(RESULT_OK, intent);
                 finish();
                 break;
-            case R.id.btnExit:
+            case R.id.cancel_tasks_item:
                 finish();
                 break;
         }
+        return true;
     }
-}
+
+
+ }

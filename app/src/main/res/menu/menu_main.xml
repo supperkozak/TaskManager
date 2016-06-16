@@ -1,19 +1,46 @@
-<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context=".activity.MainActivity">
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="3"
+        android:title="@string/action_settings"
+        android:icon="@drawable/ic_action_action_settings"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/sort_tasks"
+        android:icon="@drawable/ic_action_sort"
+        android:title="@string/sort_tasks"
+        android:orderInCategory="2"
+        app:showAsAction="always"/>
+    <group android:id="@+id/group_sort">
+        <item
+            android:id="@+id/main_exit"
+            android:title="@string/main_exit"
+            android:orderInCategory="100"
+            app:showAsAction="never"/>
+        <item
+            android:id="@+id/remove_tasks"
+            android:title="@string/remove_tasks"
+            android:orderInCategory="99"
+            app:showAsAction="never"/>
+        <item
+            android:id="@+id/add_tasks"
+            android:title="@string/add_tasks"
+            android:orderInCategory="98"
+            app:showAsAction="never"/>
 
-
+    </group>
 
     <item
-        android:id="@+id/remove_tasks"
-        android:icon="@drawable/add_tasks_focused"
-        android:title="@string/remove_tasks"
-        app:showAsAction="ifRoom"/>
-    <item
-        android:id="@+id/add_tasks"
-        android:icon="@drawable/add_tasks"
-        android:title="@string/add_tasks"
-        app:showAsAction="ifRoom"/>
+        android:id="@+id/add_task"
+        android:icon="@drawable/ic_action_add_task"
+        android:title="@string/button_add"
+        android:orderInCategory="1"
+        app:showAsAction="always"/>
+
+
 
 
 </menu>
