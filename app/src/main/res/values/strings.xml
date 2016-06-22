@@ -246,4 +246,5 @@
     <string name="pref_group_colors_default">Стандартні кольори</string>
     <string name="default_pref_summary">Повернутись до стандартних кольорів</string>
     <string name="default_pref_title">Стандартні кольори</string>
+    <string name="preference_default">За замовчуванням</string>
 </resources>

@@ -1,14 +1,9 @@
 package com.example.taskmanager.activity;
 
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
@@ -18,7 +13,6 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -40,7 +34,6 @@ import java.util.Comparator;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements LoadCompleter, YesNoListener {
-    Button mButtonAdd;
     ListView mlvListTask;
     Toolbar mToolbar;
 
@@ -52,6 +45,16 @@ public class MainActivity extends AppCompatActivity implements LoadCompleter, Ye
     MyAlertDialog alertDialod;
 
     int mListEditPosition = -1;
+
+    private Boolean getPopUmMenuVisible() {
+        return mIsPopUmMenuVisible;
+    }
+
+    private void setPopUmMenuVisible(Boolean popUmMenuVisible) {
+        mIsPopUmMenuVisible = popUmMenuVisible;
+    }
+
+    Boolean mIsPopUmMenuVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +79,10 @@ public class MainActivity extends AppCompatActivity implements LoadCompleter, Ye
         LoaderSharedPreferences loader = null;
         if (savedInstanceState != null) {
             mListTask = savedInstanceState.getParcelableArrayList(Constant.KEY_SAVE_STATE);
+            mIsPopUmMenuVisible = savedInstanceState.getBoolean(Constant.KEY_SAVE_MENU_STATE, false);
+
             initData();
+
         } else {
             // mListTask = sharedPreference.getTasksFromSharedPreferences(MainActivity.this);
 
@@ -137,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements LoadCompleter, Ye
                     Snackbar.make(v, R.string.snack_resume, Snackbar.LENGTH_LONG)
                             .show();
                 }
-                sharedPreference.saveTasksToSharedPreferences(MainActivity.this, mListTask);
+                sharedPreference.saveTasksToSharedPreferencesGSON(MainActivity.this, mListTask);
                 mAdapter.notifyDataSetChanged();
             }
         });
@@ -173,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements LoadCompleter, Ye
                         mListTask.set(mListEditPosition, mTask);
                         mListEditPosition = -1;
                     }
-                    sharedPreference.saveTasksToSharedPreferences(MainActivity.this, mListTask);
+                    sharedPreference.saveTasksToSharedPreferencesGSON(MainActivity.this, mListTask);
                     mAdapter.notifyDataSetChanged();
                     break;
             }
@@ -187,18 +193,23 @@ public class MainActivity extends AppCompatActivity implements LoadCompleter, Ye
         super.onSaveInstanceState(outState);
         if(mListTask != null){
             outState.putParcelableArrayList(Constant.KEY_SAVE_STATE, mListTask);
+            outState.putBoolean(Constant.KEY_SAVE_MENU_STATE, mIsPopUmMenuVisible);
         }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        sharedPreference.saveTasksToSharedPreferences(MainActivity.this, mListTask);
+        sharedPreference.saveTasksToSharedPreferencesGSON(MainActivity.this, mListTask);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        if ( mIsPopUmMenuVisible) {
+            MenuItem mView = (MenuItem) findViewById(R.id.sort_tasks);
+            showPopupMenu((View)mView);
+        }
         return true;
     }
 
@@ -297,6 +308,8 @@ public class MainActivity extends AppCompatActivity implements LoadCompleter, Ye
 
             case R.id.sort_tasks:
                 showPopupMenu(findViewById(R.id.sort_tasks));
+                setPopUmMenuVisible(true);
+
                 break;
 
             case R.id.add_task:

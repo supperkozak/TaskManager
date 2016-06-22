@@ -25,7 +25,7 @@ public class LoaderSharedPreferences implements Runnable {
 
 
     public void run() {
-        mListTask = sharedPreference.getTasksFromSharedPreferences(context);
+        mListTask = sharedPreference.getTasksFromSharedPreferencesGSON(context);
         loadCompleter.loadCallback(mListTask);
 
     }

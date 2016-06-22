@@ -3,15 +3,19 @@ package com.example.taskmanager.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Color;
+import android.preference.PreferenceManager;
 
 import com.example.taskmanager.constant.Constant;
 import com.example.taskmanager.model.Task;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SharedPreference {
@@ -20,7 +24,7 @@ public class SharedPreference {
         super();
     }
 
-    public void saveTasksToSharedPreferences(Context context, List<Task> tasks) {
+    public void aveTasksToSharedPreferences(Context context, List<Task> tasks) {
         SharedPreferences settings;
         Editor editor;
 
@@ -59,7 +63,7 @@ public class SharedPreference {
         editor.apply();
     }
 
-    public ArrayList<Task> getTasksFromSharedPreferences(Context context) {
+    public ArrayList<Task> etTasksFromSharedPreferences(Context context) {
         SharedPreferences settings;
         String json;
         ArrayList<Task> tasks = null;
@@ -93,5 +97,69 @@ public class SharedPreference {
 
         }
         return tasks;
+    }
+
+    public void saveTasksToSharedPreferencesGSON(Context context, List<Task> tasks) {
+        SharedPreferences settings;
+        Editor editor;
+
+        settings = context.getSharedPreferences(Constant.PREFS_NAME, Context.MODE_PRIVATE);
+        editor = settings.edit();
+
+        Gson gson = new Gson();
+        String gsonString = gson.toJson(tasks);
+
+        editor.putString(Constant.PREFS_KEY, gsonString);
+        editor.commit();
+
+    }
+
+    public ArrayList<Task> getTasksFromSharedPreferencesGSON(Context context) {
+        SharedPreferences settings;
+        List<Task> tasks;
+
+        settings = context.getSharedPreferences(Constant.PREFS_NAME, Context.MODE_PRIVATE);
+
+        if (settings.contains(Constant.PREFS_KEY)) {
+            String jsonFavorites = settings.getString(Constant.PREFS_KEY, null);
+            Gson gson = new Gson();
+            Task[] arrayTasks = gson.fromJson(jsonFavorites,
+                    Task[].class);
+
+            tasks = Arrays.asList(arrayTasks);
+            tasks = new ArrayList<Task>(tasks);
+        } else
+            return null;
+        return (ArrayList<Task>) tasks;
+
+    }
+
+    public int getColorFromPreferences(Context context, String key, int defaultCcolor) {
+        SharedPreferences settings;
+        settings = PreferenceManager.getDefaultSharedPreferences(context);
+        //int colorValue = defaultCcolor;
+
+        if (settings.contains(key)) {
+
+             defaultCcolor = settings.getInt(key, 0);
+           // defaultCcolor = Color.parseColor(color);
+        }
+
+
+/*
+
+        int color = 0;
+
+        settings = context.getSharedPreferences(key, Context.MODE_PRIVATE);
+
+        if (settings.contains(Constant.PREFS_KEY)) {
+            String intColor = settings.getString(key, null);
+
+
+
+        } else
+            return 123310;*/
+        return defaultCcolor;
+
     }
 }

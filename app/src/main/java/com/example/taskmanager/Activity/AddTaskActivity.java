@@ -26,27 +26,31 @@ public class AddTaskActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
         mTask = getIntent().getParcelableExtra(Task.class.getCanonicalName());
+        mToolbar = (Toolbar) findViewById(R.id.toolbar_add_task);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               onBackPressed();
+            }
+        });
         if (mTask != null){
             editData();
         } else {
             initData();
         }
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
     }
 
     private void initData() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar_add_task);
         mToolbar.setTitle(R.string.title_add_new_task);
         mEdTaskName = (EditText) findViewById(R.id.edTaskName);
         mEdTaskComment = (EditText) findViewById(R.id.edTaskComment);
-
-
     }
 
     private void editData() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar_add_task);
+
         mToolbar.setTitle(R.string.title_edit_task);
         mEdTaskName = (EditText) findViewById(R.id.edTaskName);
         mEdTaskName.setText(mTask.getTaskName());

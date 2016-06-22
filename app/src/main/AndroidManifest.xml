@@ -24,16 +24,9 @@
                     android:value="com.example.taskmanager.activity.MainActivity" />
         </activity>
         <activity
-            android:name=".activity.SettingsActivity">
-                <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value="com.example.taskmanager.activity.MainActivity" />
-        </activity>
-        <activity
             android:name=".activity.PreferencesActivity"
-            android:theme="@style/Theme.AppCompat"
-            android:label="@string/title_settings"
-            >
+            android:theme="@style/AppTheme.Settings"
+            android:label="@string/title_settings">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.taskmanager.activity.MainActivity" />

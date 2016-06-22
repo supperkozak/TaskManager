@@ -1,6 +1,8 @@
 package com.example.taskmanager.adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +10,9 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.taskmanager.R;
+import com.example.taskmanager.constant.Constant;
 import com.example.taskmanager.model.Task;
+import com.example.taskmanager.utils.SharedPreference;
 
 import java.util.List;
 
@@ -16,7 +20,9 @@ public class ListViewAdapterTask extends BaseAdapter  {
     List<Task> mListTask;
     Context mContext;
     LayoutInflater mlInflater;
-
+    SharedPreference sharedPreference = new SharedPreference();
+   // SharedPreferences settings;
+    //settings = PreferenceManager.getDefaultSharedPreferences(mContext);
     public ListViewAdapterTask(List<Task> listTask, Context context) {
         mListTask = listTask;
         mContext = context;
@@ -81,13 +87,13 @@ public class ListViewAdapterTask extends BaseAdapter  {
         viewHolder.tvCommentTask.setText(mListTask.get(position).getTaskComment());
         viewHolder.tvTimeTaskStart.setText(mListTask.get(position).getTimeTaskStart());
         viewHolder.tvTimeTaskFinish.setText(mListTask.get(position).getTimeTaskFinish());
-        viewHolder.view.setBackgroundColor(mContext.getResources().getColor(R.color.notStart));
+        viewHolder.view.setBackgroundColor(sharedPreference.getColorFromPreferences(mContext, Constant.COLOR_NOT_START, R.color.notStart));
 
         if (mListTask.get(position).getTimeTaskStart() != null && !mListTask.get(position).getTimeTaskStart().isEmpty()) {
-            viewHolder.view.setBackgroundColor(mContext.getResources().getColor(R.color.onStart));
+            viewHolder.view.setBackgroundColor(sharedPreference.getColorFromPreferences(mContext, Constant.COLOR_ON_START, R.color.onStart));
         }
         if (mListTask.get(position).getTimeTaskFinish() != null &&!mListTask.get(position).getTimeTaskFinish().isEmpty()) {
-            viewHolder.view.setBackgroundColor(mContext.getResources().getColor(R.color.onFinish));
+            viewHolder.view.setBackgroundColor(sharedPreference.getColorFromPreferences(mContext, Constant.COLOR_ON_FINISH, R.color.onFinish));
         }
         return convertView;
     }

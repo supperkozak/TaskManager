@@ -1,24 +1,64 @@
 package com.example.taskmanager.activity;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.color.CircleView;
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.afollestad.materialdialogs.internal.ThemeSingleton;
 import com.afollestad.materialdialogs.util.DialogUtils;
 import com.example.taskmanager.R;
+import com.example.taskmanager.utils.PreferencesScreen;
 
-public class PreferencesActivity extends AppCompatActivity implements ColorChooserDialog.ColorCallback{
+public class PreferencesActivity extends AppCompatActivity/* implements ColorChooserDialog.ColorCallback*/{
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getFragmentManager()
+                .beginTransaction()
+                .replace(android.R.id.content, new PreferencesScreen())
+                .commit();
 
-    ActionBar mToolbar;
+        ActionBar mToolbar = getSupportActionBar();
+
+        if(mToolbar != null) {
+            mToolbar.setDisplayHomeAsUpEnabled(true);
+            mToolbar.setTitle(R.string.title_settings);
+            mToolbar.setDisplayShowTitleEnabled(true);
+            mToolbar.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_action_back));
+        }
+
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+
+
+}
+
+  /*  ActionBar mToolbar;
 
     private int notStart;
     private int onStart;
@@ -40,14 +80,11 @@ public class PreferencesActivity extends AppCompatActivity implements ColorChoos
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.preference_activity_custom);
-          //  mToolbar = (Toolbar) findViewById(R.id.toolbar_settings);
-            //mToolbar.setTitle(R.string.title_settings);
             mToolbar = getSupportActionBar();
             mToolbar.setDisplayHomeAsUpEnabled(true);
             mToolbar.setTitle(R.string.title_settings);
             mToolbar.setDisplayShowTitleEnabled(true);
             mToolbar.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_action_back));
-
 
             if (getFragmentManager().findFragmentById(R.id.content_frame) == null) {
                 getFragmentManager().beginTransaction().replace(R.id.content_frame, new SettingsFragment()).commit();
@@ -62,7 +99,7 @@ public class PreferencesActivity extends AppCompatActivity implements ColorChoos
             }
             return super.onOptionsItemSelected(item);
         }
-
+*/
 
   /*  Toolbar mToolbar;
 
@@ -146,7 +183,7 @@ public class PreferencesActivity extends AppCompatActivity implements ColorChoos
                 .show();*//*
     }*/
 
-    @Override
+   /* @Override
     public void onColorSelection(@NonNull ColorChooserDialog dialog, @ColorInt int color) {
         if (dialog.isAccentMode()) {
             accentPreselect = color;
@@ -156,13 +193,13 @@ public class PreferencesActivity extends AppCompatActivity implements ColorChoos
             ThemeSingleton.get().widgetColor = color;
         } else {
             notStart = color;
-           // if (getSupportActionBar() != null)
-             //   getSupportActionBar().setBackgroundDrawable(new ColorDrawable(color));
+            if (getSupportActionBar() != null)
+                getSupportActionBar().setBackgroundDrawable(new ColorDrawable(color));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getWindow().setStatusBarColor(CircleView.shiftColorDown(color));
                 getWindow().setNavigationBarColor(color);
             }
         }
-    }
-}
+    }*/
+
 

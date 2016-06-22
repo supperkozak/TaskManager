@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
+        <item name="android:colorForeground">@color/colorPrimaryDark</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -26,4 +27,9 @@
     <style name="My" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/md_material_blue_800</item>
     </style>
+
+    <style name="AppTheme.Settings" parent="AppTheme">
+
+    </style>
+
 </resources>
