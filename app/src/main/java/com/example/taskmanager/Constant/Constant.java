@@ -10,4 +10,8 @@ public class Constant {
     public static final String COLOR_NOT_START = "color_notStart";
     public static final String COLOR_ON_START = "color_onStart";
     public static final String COLOR_ON_FINISH = "color_onFinish";
+    public static final String AUTO_STOP = "auto_stop";
+
+    public static final String TASK_KEY = "task" ;
+    public static final int NOTIFICATION_ID = 1 ;
 }

@@ -39,15 +39,10 @@ public class MyAlertDialog extends DialogFragment{
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        ((YesNoListener) getActivity()).onNoAlertDialog();
-                    }
-                });
-               /* .setNegativeButton(R.string.no,  new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
-                });*/
+                });
+
         return adb.create();
     }
 

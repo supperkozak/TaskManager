@@ -11,7 +11,7 @@
             android:summary="@string/not_start_pref_summary"
             app:colorpicker_selectNoneButtonText="@string/preference_default"
             app:colorpicker_noneSelectedSummaryText="asdfcted"
-            app:colorpicker_defaultColor="#64b74c"
+            app:colorpicker_defaultColor="@color/notStart"
             />
         <com.rarepebble.colorpicker.ColorPreference
             android:key="color_onStart"
@@ -30,12 +30,19 @@
             app:colorpicker_defaultColor="@color/onFinish"
             />
 
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_group_colors_default" >
-        <Preference
+
+           <Preference
             android:summary="@string/default_pref_summary"
             android:title="@string/default_pref_title"
             android:key="customPref" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_group_time" >
+        <EditTextPreference
+            android:summary="@string/default_time_sumary"
+            android:title="@string/default_time"
+            android:key="auto_stop"
+            android:defaultValue="0"/>
 
 
         <!--

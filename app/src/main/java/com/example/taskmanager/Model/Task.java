@@ -9,13 +9,16 @@ public class Task implements Parcelable {
     private String mTimeTaskStart;
     private String mTimeTaskFinish;
     private String mTimeForToDo;
+    private long mTimeTaskNotifikation;
 
     public Task() {
+        mTimeTaskStart = "";
     }
 
     public Task(String taskName, String taskComment) {
         mTaskName = taskName;
         mTaskComment = taskComment;
+        mTimeTaskStart = "";
     }
 
     protected Task(Parcel in) {
@@ -23,6 +26,7 @@ public class Task implements Parcelable {
         mTaskComment = in.readString();
         mTimeTaskStart = in.readString();
         mTimeTaskFinish = in.readString();
+        mTimeTaskNotifikation = in.readLong();
 
     }
 
@@ -49,6 +53,7 @@ public class Task implements Parcelable {
         dest.writeString(mTaskComment);
         dest.writeString(mTimeTaskStart);
         dest.writeString(mTimeTaskFinish);
+        dest.writeLong(mTimeTaskNotifikation);
 
     }
 
@@ -102,6 +107,11 @@ public class Task implements Parcelable {
         mTimeForToDo = timeForToDo;
     }
 
+    public long getTimeTaskNotifikation() {
+        return mTimeTaskNotifikation;
+    }
 
-
+    public void setTimeTaskNotifikation(long timeTaskNotifikation) {
+        mTimeTaskNotifikation = timeTaskNotifikation;
+    }
 }

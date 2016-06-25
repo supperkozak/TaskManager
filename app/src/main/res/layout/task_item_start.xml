@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/notStart"
+                android:textColor="@color/white"
+                android:id="@+id/item_container">
+    <com.daimajia.swipe.SwipeLayout
+        xmlns:swipe="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/swipe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        swipe:leftEdgeSwipeOffset="0dp"
+        swipe:rightEdgeSwipeOffset="50dp">
+        <LinearLayout
+            android:id="@+id/swipe_delete"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FF5534"
+            android:gravity="center"
+            android:tag="tag_delete"
+            android:weightSum="10">
+
+            <ImageView
+                android:id="@+id/trash"
+                android:layout_width="27dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:src="@drawable/trash" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:text="@string/delete_item"
+                android:textColor="#fff"
+                android:textSize="17sp" />
+
+            <Button
+                android:id="@+id/button_delete_task"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="4"
+                android:background="#ffffff"
+                android:text="@string/delete_item_yes"
+                android:textColor="#FF5534" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/swipe_edit"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:background="#000000"
+            android:gravity="center"
+            android:tag="tag_edit"
+            android:weightSum="10">
+
+            <ImageButton
+                android:id="@+id/button_reset_task"
+                android:src="@drawable/ic_action_reset_task"
+                android:contentDescription="@string/button_reset_task"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="5"
+                android:padding="10dp"
+                android:background="#000000"
+                android:textColor="#FF3121" />
+
+            <ImageButton
+                android:id="@+id/button_edit_task"
+                android:src="@drawable/ic_action_edit_task"
+                android:contentDescription="@string/button_edit_task"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="5"
+                android:padding="10dp"
+                android:background="#000000"
+                android:textColor="#FF3121" />
+        </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/swipe">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="140dp"
+            android:layout_height="match_parent"
+            android:id="@+id/linearLayout">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/task_name"
+                android:id="@+id/tvCaptionTask"
+                android:textColor="@color/white"
+                android:paddingLeft="15dp"
+                android:paddingTop="5dp"/>
+
+            <TextView
+                android:id="@+id/tvCaptionComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/task_comment"
+                android:textColor="@color/white"
+                android:paddingLeft="15dp"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="10dp"
+                android:paddingTop="5dp"
+                android:paddingLeft="15dp">
+
+            <TextView
+                android:id="@+id/tvTimeTaskStart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tvTimeTaskFinish"
+                android:textColor="@color/white"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="true"/>
+
+            <TextView
+                android:id="@+id/tvTimeTaskFinish"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tvTimeTaskFinish"
+                android:textColor="@color/white"
+                android:paddingBottom="5dp"
+                android:layout_below="@+id/tvTimeTaskStart"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/button_start_task"
+                    android:background="@drawable/button_start_background"
+                    android:text="@string/start_task"
+                    android:layout_alignBottom="@+id/tvTimeTaskFinish"
+                    android:layout_centerInParent="true"
+                    android:visibility="invisible"
+                    android:clickable="false"
+                    android:layout_alignParentRight="false"
+                    android:layout_alignParentLeft="true"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/button_finish_task"
+                    android:text="@string/finish_task"
+                    android:layout_below="@+id/tvTimeTaskStart"
+                    android:background="@drawable/button_finish_background"
+                    android:layout_alignBottom="@+id/tvTimeTaskFinish"
+                    android:layout_alignRight="@+id/button_start_task"
+                    android:layout_alignEnd="@+id/button_start_task"
+                    android:layout_alignLeft="@+id/button_start_task"
+                    android:layout_alignStart="@+id/button_start_task"
+                    android:visibility="visible"
+                    android:clickable="false"
+                    />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/linearLayout3"
+            android:gravity="left">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_name_task"
+                android:paddingLeft="5dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignBottom="@+id/tvCaptionTask"
+                android:textColor="@color/white"
+                android:layout_gravity="center_horizontal"
+                android:layout_alignRight="@+id/swipe"
+                android:layout_alignEnd="@+id/swipe"
+                android:paddingTop="5dp"/>
+
+            <TextView
+                android:id="@+id/tv_comment_task"
+                android:nestedScrollingEnabled="false"
+                android:paddingLeft="5dp"
+                android:textColor="@color/white"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="top|left"
+                android:paddingBottom="5dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+    </com.daimajia.swipe.SwipeLayout>
+</RelativeLayout>

@@ -1,6 +1,7 @@
 package com.example.taskmanager.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -21,6 +22,7 @@ import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.afollestad.materialdialogs.internal.ThemeSingleton;
 import com.afollestad.materialdialogs.util.DialogUtils;
 import com.example.taskmanager.R;
+import com.example.taskmanager.model.Task;
 import com.example.taskmanager.utils.PreferencesScreen;
 
 public class PreferencesActivity extends AppCompatActivity/* implements ColorChooserDialog.ColorCallback*/{
@@ -48,6 +50,10 @@ public class PreferencesActivity extends AppCompatActivity/* implements ColorCho
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == android.R.id.home) {
             onBackPressed();
+
+            Intent intent = new Intent();
+            setResult(RESULT_OK, intent);
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }

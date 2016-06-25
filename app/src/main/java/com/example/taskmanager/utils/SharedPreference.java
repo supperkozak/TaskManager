@@ -145,21 +145,26 @@ public class SharedPreference {
            // defaultCcolor = Color.parseColor(color);
         }
 
-
-/*
-
-        int color = 0;
-
-        settings = context.getSharedPreferences(key, Context.MODE_PRIVATE);
-
-        if (settings.contains(Constant.PREFS_KEY)) {
-            String intColor = settings.getString(key, null);
-
-
-
-        } else
-            return 123310;*/
         return defaultCcolor;
+
+    }
+
+    public long getTimeAutoStopFromPreferences(Context context, String key) {
+        SharedPreferences settings;
+        settings = PreferenceManager.getDefaultSharedPreferences(context);
+        Long defaultStop = 0l;
+
+        if (settings.contains(key)) {
+
+            try {
+                int i = Integer.parseInt(settings.getString(key, "0"));
+                defaultStop = ((long)i)*1000*60;
+            } catch (NumberFormatException nfe) {
+                defaultStop = 0l;
+            }
+        }
+
+        return defaultStop;
 
     }
 }

@@ -28,7 +28,7 @@ public class AddTaskActivity extends AppCompatActivity {
         mTask = getIntent().getParcelableExtra(Task.class.getCanonicalName());
         mToolbar = (Toolbar) findViewById(R.id.toolbar_add_task);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,6 +36,7 @@ public class AddTaskActivity extends AppCompatActivity {
                onBackPressed();
             }
         });
+
         if (mTask != null){
             editData();
         } else {
@@ -44,14 +45,14 @@ public class AddTaskActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        mToolbar.setTitle(R.string.title_add_new_task);
+        getSupportActionBar().setTitle(R.string.title_add_new_task);
         mEdTaskName = (EditText) findViewById(R.id.edTaskName);
         mEdTaskComment = (EditText) findViewById(R.id.edTaskComment);
     }
 
     private void editData() {
 
-        mToolbar.setTitle(R.string.title_edit_task);
+        getSupportActionBar().setTitle(R.string.title_edit_task);
         mEdTaskName = (EditText) findViewById(R.id.edTaskName);
         mEdTaskName.setText(mTask.getTaskName());
         mEdTaskComment = (EditText) findViewById(R.id.edTaskComment);

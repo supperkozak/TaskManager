@@ -1,43 +1,49 @@
 package com.example.taskmanager.activity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.ActionMode;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.taskmanager.R;
-import com.example.taskmanager.adapter.ListViewAdapterTask;
+
+import com.example.taskmanager.adapter.RecyclerViewAdapter;
+import com.example.taskmanager.adapter.util.DividerItemDecoration;
 import com.example.taskmanager.constant.Constant;
 import com.example.taskmanager.interfases.LoadCompleter;
+import com.example.taskmanager.interfases.SetPositionLisener;
 import com.example.taskmanager.interfases.YesNoListener;
 import com.example.taskmanager.model.Task;
 import com.example.taskmanager.utils.LoaderSharedPreferences;
 import com.example.taskmanager.utils.MyAlertDialog;
 import com.example.taskmanager.utils.SharedPreference;
+import com.example.taskmanager.utils.TaskNotification;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 
-public class MainActivity extends AppCompatActivity implements LoadCompleter, YesNoListener {
-    ListView mlvListTask;
+import jp.wasabeef.recyclerview.animators.FadeInLeftAnimator;
+
+public class MainActivity extends AppCompatActivity implements LoadCompleter, YesNoListener, SetPositionLisener {
     Toolbar mToolbar;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
-    ListViewAdapterTask mAdapter;
     ArrayList<Task> mListTask;
 
     private SharedPreference sharedPreference;
@@ -45,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements LoadCompleter, Ye
     MyAlertDialog alertDialod;
 
     int mListEditPosition = -1;
+    private static long back_pressed;
 
     private Boolean getPopUmMenuVisible() {
         return mIsPopUmMenuVisible;
@@ -93,73 +100,37 @@ public class MainActivity extends AppCompatActivity implements LoadCompleter, Ye
                 e.printStackTrace();
             }
         }
-        onClickListView();
     }
 
     private void initData() {
-        mlvListTask = (ListView) findViewById(R.id.listView);
-        mAdapter = new ListViewAdapterTask(mListTask, this);
-        mlvListTask.setAdapter(mAdapter);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setHasFixedSize(true);
+
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getResources().getDrawable(R.drawable.divider)));
+        mRecyclerView.setItemAnimator(new FadeInLeftAnimator());
+
+        mAdapter = new RecyclerViewAdapter(this, mListTask, this);
+        mRecyclerView.setAdapter(mAdapter);
+
     }
 
-    private void onClickListView (){
-            mlvListTask.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                TextView tvmTimeTaskStart = (TextView) v.findViewById(R.id.tvTimeTaskStart);
-                TextView tvmTimeTaskFinish = (TextView) v.findViewById(R.id.tvTimeTaskFinish);
-
-                SimpleDateFormat sdf = new SimpleDateFormat("MM:dd:yyyy:HH:mm");
-                String currentDateAndTime = sdf.format(new Date());
-
-                if(mListTask.get(position).getTimeTaskStart() == null || mListTask.get(position).getTimeTaskStart().equalsIgnoreCase("")){
-                    tvmTimeTaskStart.setText(currentDateAndTime.toString());
-                    mListTask.get(position).setTimeTaskStart(tvmTimeTaskStart.getText().toString());
-                    Snackbar.make(v, getResources().getString(R.string.snack_start) + " " + mListTask.get(position).getTimeTaskStart(), Snackbar.LENGTH_LONG)
-                            .show();
-                }else if(mListTask.get(position).getTimeTaskFinish() == null||mListTask.get(position).getTimeTaskFinish().equalsIgnoreCase("")) {
-                    tvmTimeTaskFinish.setText(currentDateAndTime.toString());
-                    mListTask.get(position).setTimeTaskFinish(tvmTimeTaskFinish.getText().toString());
-
-                    String dateStringStart = mListTask.get(position).getTimeTaskStart();
-                    String dateStringFinish = mListTask.get(position).getTimeTaskFinish();
-
-                    try {
-                        long timeStartTask = sdf.parse(dateStringStart).getTime();
-                        long timeFinishTask = sdf.parse(dateStringFinish).getTime();
-                        long timeForToDo = timeFinishTask - timeStartTask;
-                        mListTask.get(position).setTimeForToDo(Long.toString(timeForToDo));
-
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-
-                    Snackbar.make(v, getResources().getString(R.string.snack_finish) + " " + mListTask.get(position).getTimeTaskStart() +
-                            " " + mListTask.get(position).getTimeTaskFinish() + " " +
-                            Long.valueOf(mListTask.get(position).getTimeForToDo())/1000/60/60 + ":" +
-                            Long.valueOf(mListTask.get(position).getTimeForToDo())/1000/60%60, Snackbar.LENGTH_LONG).show();
-
-                }else{
-
-                    Snackbar.make(v, R.string.snack_resume, Snackbar.LENGTH_LONG)
-                            .show();
-                }
-                sharedPreference.saveTasksToSharedPreferencesGSON(MainActivity.this, mListTask);
-                mAdapter.notifyDataSetChanged();
-            }
-        });
-        mlvListTask.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-
-            public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
-
+    @Override
+    public void setPosition(int position) {
                 Task mTask = mListTask.get(position);
                 mListEditPosition = position;
                 Intent intent = new Intent(MainActivity.this, AddTaskActivity.class);
                 intent.putExtra(Task.class.getCanonicalName(), mTask);
                 startActivityForResult(intent, Constant.KEY_ADD_TASK);
-                return false;
+
             }
-        });
+
+    @Override
+    public void notifyAdapter() {
+        mAdapter.notifyDataSetChanged();
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -182,9 +153,13 @@ public class MainActivity extends AppCompatActivity implements LoadCompleter, Ye
                     sharedPreference.saveTasksToSharedPreferencesGSON(MainActivity.this, mListTask);
                     mAdapter.notifyDataSetChanged();
                     break;
+                case Constant.KEY_SETTINGS:
+
+                    mAdapter.notifyDataSetChanged();
+                    break;
             }
         } else {
-            Snackbar.make(mlvListTask, "Wrong result", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(mRecyclerView, "Wrong result", Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -291,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements LoadCompleter, Ye
                 }
 
                 mAdapter.notifyDataSetChanged();
-                Snackbar.make(mlvListTask,getResources().getString(R.string.add_tasks_snack_1) + " " + itemsCount + " " +
+                Snackbar.make(mRecyclerView,getResources().getString(R.string.add_tasks_snack_1) + " " + itemsCount + " " +
                         getResources().getString(R.string.add_tasks_snack_2), Snackbar.LENGTH_LONG).show();
                 break;
 
@@ -317,7 +292,7 @@ public class MainActivity extends AppCompatActivity implements LoadCompleter, Ye
                 break;
 
             case R.id.action_settings:
-                startActivity(new Intent(getApplicationContext(), PreferencesActivity.class));
+                startActivityForResult(new Intent(MainActivity.this, PreferencesActivity.class), Constant.KEY_SETTINGS);
                 break;
 
         }
@@ -334,19 +309,21 @@ public class MainActivity extends AppCompatActivity implements LoadCompleter, Ye
         initData();
     }
     public double calculateListViewElements(){
-        ListViewAdapterTask listAdapter = (ListViewAdapterTask) mlvListTask.getAdapter();
+        RecyclerViewAdapter recyclerAdapter = (RecyclerViewAdapter) mRecyclerView.getAdapter();
+        int dfs = 0;
 
-        if (!listAdapter.isEmpty()) {
-            View viewItem = listAdapter.getView(0, null, mlvListTask);
+        if (!recyclerAdapter.isOpen(0)) {
+            View viewItem = null;
+
             viewItem.measure(0, 0);
             double itemHighDp = viewItem.getMeasuredHeight();
-            double listViewHighPx = mlvListTask.getHeight();
+            double listViewHighPx = mRecyclerView.getHeight();
             DisplayMetrics dm = new DisplayMetrics();
             getWindowManager().getDefaultDisplay().getMetrics(dm);
             double dpiScreen = dm.densityDpi;
             double itemHighPx = itemHighDp * (dpiScreen / 160.0);
 
-            return listViewHighPx /(itemHighPx + mlvListTask.getDividerHeight());
+            return listViewHighPx /(itemHighPx + 1);
 
         }else {
             return 0;
@@ -369,19 +346,12 @@ public class MainActivity extends AppCompatActivity implements LoadCompleter, Ye
     }
 
     @Override
-    public void onNoAlertDialog() {
-
-    }
-
-    private static long back_pressed;
-
-    @Override
     public void onBackPressed() {
 
         if (back_pressed + 2000 > System.currentTimeMillis())
             super.onBackPressed();
         else
-            Snackbar.make(mlvListTask,R.string.snackbar_exit, Snackbar.LENGTH_LONG).show();
+            Snackbar.make(mRecyclerView,R.string.snackbar_exit, Snackbar.LENGTH_LONG).show();
 
         back_pressed = System.currentTimeMillis();
     }

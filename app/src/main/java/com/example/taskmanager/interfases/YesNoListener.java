@@ -7,6 +7,6 @@ public interface YesNoListener {
 
         void onYesAlertDialog();
 
-        void onNoAlertDialog();
+        //void onNoAlertDialog();
 
 }

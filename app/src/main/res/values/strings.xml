@@ -34,6 +34,27 @@
     <string name="no">Ні</string>
     <string name="title_settings">Налаштування</string>
     <string name="snackbar_exit">Натисныть ще раз щоб вийти</string>
+    <string name="pref_group_colors">Кольори стану завдань</string>
+    <string name="preference_not_start">Не почате завдання</string>
+    <string name="preference_not_start_message">Не почате завдання</string>
+    <string name="not_start_pref_title">Не почате завдання</string>
+    <string name="not_start_pref_summary">Виберіть колір для не початого завдання</string>
+    <string name="on_start_pref_summary">Виберіть колір для авдання в роботі</string>
+    <string name="on_start_pref_title">Завдання в роботі</string>
+    <string name="on_finish_pref_title">Завдання виконано</string>
+    <string name="on_finish_pref_summary">Виберіть колір для виконаного завдання</string>
+    <string name="pref_group_colors_default">Стандартні кольори</string>
+    <string name="default_pref_summary">Повернутись до стандартних кольорів</string>
+    <string name="default_pref_title">Стандартні кольори</string>
+    <string name="preference_default">За замовчуванням</string>
+    <string name="delete_item">Знищити завдання?</string>
+    <string name="delete_item_yes">Знищити</string>
+    <string name="button_reset_task">Відновити виконання</string>
+    <string name="button_edit_task">Редагувати завдання</string>
+    <string name="snack_reset">Завдання знову виконується</string>
+    <string name="snack_not_start">Завдання ще не почате</string>
+    <string name="task_deleted">знищино!</string>
+
     <string name="color_palette">Color Palette</string>
     <string name="colors">Colors</string>
 
@@ -122,64 +143,6 @@
         <item>Facebook is an online social networking service headquartered in Menlo Park, California. Its website was launched on February 4, 2004, by Mark Zuckerberg with friends.</item>
     </string-array>
 
-    <string-array name="states">
-        <item>Alabama</item>
-        <item>Alaska</item>
-        <item>American Samoa</item>
-        <item>Arizona</item>
-        <item>Arkansas</item>
-        <item>California</item>
-        <item>Colorado</item>
-        <item>Connecticut</item>
-        <item>Delaware</item>
-        <item>District of Columbia</item>
-        <item>Florida</item>
-        <item>Georgia</item>
-        <item>Guam</item>
-        <item>Hawaii</item>
-        <item>Idaho</item>
-        <item>Illinois</item>
-        <item>Indiana</item>
-        <item>Iowa</item>
-        <item>Kansas</item>
-        <item>Kentucky</item>
-        <item>Louisiana</item>
-        <item>Maine</item>
-        <item>Maryland</item>
-        <item>Massachusetts</item>
-        <item>Michigan</item>
-        <item>Minnesota</item>
-        <item>Mississippi</item>
-        <item>Missouri</item>
-        <item>Montana</item>
-        <item>Nebraska</item>
-        <item>Nevada</item>
-        <item>New Hampshire</item>
-        <item>New Jersey</item>
-        <item>New Mexico</item>
-        <item>New York</item>
-        <item>North Carolina</item>
-        <item>North Dakota</item>
-        <item>Northern Marianas Islands</item>
-        <item>Ohio</item>
-        <item>Oklahoma</item>
-        <item>Oregon</item>
-        <item>Pennsylvania</item>
-        <item>Puerto Rico</item>
-        <item>Rhode Island</item>
-        <item>South Carolina</item>
-        <item>South Dakota</item>
-        <item>Tennessee</item>
-        <item>Texas</item>
-        <item>Utah</item>
-        <item>Vermont</item>
-        <item>Virginia</item>
-        <item>Virgin Islands</item>
-        <item>Washington</item>
-        <item>West Virginia</item>
-        <item>Wisconsin</item>
-        <item>Wyoming</item>
-    </string-array>
 
     <string name="preference_dialogs">Preference Dialogs</string>
     <string name="list_pref_title">List Preference</string>
@@ -234,17 +197,11 @@
     <string name="singleChoice_longItems">Single Choice (Long Items)</string>
     <string name="multiChoice_longItems">Multi Choice (Long Items)</string>
     <string name="file_chooser">File Chooser</string>
-    <string name="pref_group_colors">Кольори стану завдань</string>
-    <string name="preference_not_start">Не почате завдання</string>
-    <string name="preference_not_start_message">Не почате завдання</string>
-    <string name="not_start_pref_title">Не почате завдання</string>
-    <string name="not_start_pref_summary">Виберіть колір для не початого завдання</string>
-    <string name="on_start_pref_summary">Виберіть колір для авдання в роботі</string>
-    <string name="on_start_pref_title">Завдання в роботі</string>
-    <string name="on_finish_pref_title">Завдання виконано</string>
-    <string name="on_finish_pref_summary">Виберіть колір для виконаного завдання</string>
-    <string name="pref_group_colors_default">Стандартні кольори</string>
-    <string name="default_pref_summary">Повернутись до стандартних кольорів</string>
-    <string name="default_pref_title">Стандартні кольори</string>
-    <string name="preference_default">За замовчуванням</string>
+    <string name="start_task">Старт</string>
+    <string name="finish_task">Фініш</string>
+    <string name="pref_group_time">Період виконання</string>
+    <string name="default_time">Термін автозавершення</string>
+    <string name="default_time_sumary">Вкажіть у хвилинах термін автозавершення</string>
+    <string name="notification">Повідомлення</string>
+
 </resources>
