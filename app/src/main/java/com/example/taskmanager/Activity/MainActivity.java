@@ -1,8 +1,5 @@
 package com.example.taskmanager.activity;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.view.ActionMode;
 import android.view.View;
 import android.view.Menu;
@@ -30,7 +26,6 @@ import com.example.taskmanager.model.Task;
 import com.example.taskmanager.utils.LoaderSharedPreferences;
 import com.example.taskmanager.utils.MyAlertDialog;
 import com.example.taskmanager.utils.SharedPreference;
-import com.example.taskmanager.utils.TaskNotification;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,7 +36,7 @@ import jp.wasabeef.recyclerview.animators.FadeInLeftAnimator;
 public class MainActivity extends AppCompatActivity implements LoadCompleter, YesNoListener, SetPositionLisener {
     Toolbar mToolbar;
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private RecyclerViewAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     ArrayList<Task> mListTask;
@@ -251,7 +246,41 @@ public class MainActivity extends AppCompatActivity implements LoadCompleter, Ye
                 double items;
                 int itemsCount;
                 if (mListTask.isEmpty()){
+
                     addTask(0);
+                 /*   Thread t = new Thread(new Runnable() {
+
+                        public void run() {
+                            Handler h = new Handler() {
+                                @Override
+                                public void publish(LogRecord logRecord) {
+
+                                }
+
+                                @Override
+                                public void flush() {
+
+                                }
+
+                                @Override
+                                public void close() throws SecurityException {
+
+                                }
+                            };
+
+                        }
+
+                    });
+                    t.start();
+
+
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }*/
+                    mAdapter.setListTask(mListTask);
+                    mRecyclerView.setAdapter(mAdapter);
                     items = calculateListViewElements() * 3;
                     itemsCount = (int) Math.ceil(items);
                     for (int i = 1; i < itemsCount; i++) {
@@ -309,21 +338,13 @@ public class MainActivity extends AppCompatActivity implements LoadCompleter, Ye
         initData();
     }
     public double calculateListViewElements(){
-        RecyclerViewAdapter recyclerAdapter = (RecyclerViewAdapter) mRecyclerView.getAdapter();
-        int dfs = 0;
 
-        if (!recyclerAdapter.isOpen(0)) {
-            View viewItem = null;
+        if (!mListTask.isEmpty()) {
 
-            viewItem.measure(0, 0);
-            double itemHighDp = viewItem.getMeasuredHeight();
-            double listViewHighPx = mRecyclerView.getHeight();
-            DisplayMetrics dm = new DisplayMetrics();
-            getWindowManager().getDefaultDisplay().getMetrics(dm);
-            double dpiScreen = dm.densityDpi;
-            double itemHighPx = itemHighDp * (dpiScreen / 160.0);
+            double x = mRecyclerView.getChildAt(0).getHeight();
+            double y = mRecyclerView.getHeight();
 
-            return listViewHighPx /(itemHighPx + 1);
+            return y/x;
 
         }else {
             return 0;
@@ -332,7 +353,13 @@ public class MainActivity extends AppCompatActivity implements LoadCompleter, Ye
 
     public void addTask(int i) {
         Task task = new Task();
-        task.setTaskName("" + i);
+        String[] firstWord = getResources().getStringArray(R.array.first_word);
+        String[] secondWord = getResources().getStringArray(R.array.second_word);
+        String[] thirdWord = getResources().getStringArray(R.array.third_word);
+        String taskName = i + ". " + firstWord[(int)(Math.random()*firstWord.length)] + " "
+                + secondWord[(int)(Math.random()*secondWord.length)] + " "
+                + thirdWord[(int)(Math.random()*thirdWord.length)];
+        task.setTaskName(taskName);
         mListTask.add(task);
         mAdapter.notifyDataSetChanged();
     }

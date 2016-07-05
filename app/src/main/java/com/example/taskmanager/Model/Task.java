@@ -13,12 +13,14 @@ public class Task implements Parcelable {
 
     public Task() {
         mTimeTaskStart = "";
+        mTimeTaskFinish = "";
     }
 
     public Task(String taskName, String taskComment) {
         mTaskName = taskName;
         mTaskComment = taskComment;
         mTimeTaskStart = "";
+        mTimeTaskFinish = "";
     }
 
     protected Task(Parcel in) {
