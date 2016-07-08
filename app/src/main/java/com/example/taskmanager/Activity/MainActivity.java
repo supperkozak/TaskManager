@@ -217,17 +217,14 @@ public class MainActivity extends AppCompatActivity implements YesNoListener, Se
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-
-
         switch (item.getItemId()) {
             case R.id.add_tasks:
                 double items;
                 int itemsCount;
+
                 if (mRealm.getTasks().isEmpty()){
-
-                    if (mRecyclerView.getChildAt(0)==null){
-                    }
-
+                    addTask(0);
+                    updateAdapter();
                     items = calculateListViewElements() * 3;
                     itemsCount = (int) Math.ceil(items);
                     for (int i = 1; i < itemsCount; i++) {
@@ -273,7 +270,6 @@ public class MainActivity extends AppCompatActivity implements YesNoListener, Se
         return true;
     }
 
-
     public double calculateListViewElements() {
 
         if (mRecyclerView.getChildAt(0)!=null) {
@@ -299,6 +295,7 @@ public class MainActivity extends AppCompatActivity implements YesNoListener, Se
                 + thirdWord[(int)(Math.random()*thirdWord.length)];
         task.setTaskName(taskName);
         mRealm.copyToRealmOrUpdate(task);
+
     }
 
     @Override

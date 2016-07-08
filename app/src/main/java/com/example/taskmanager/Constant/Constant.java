@@ -15,7 +15,8 @@ public class Constant {
     public static final String REALM_ID = "mId";
     public static final String REALM_NAME = "mTaskName";
     public static final String REALM_TIME_START = "mTimeTaskStart";
+    public static final String REALM_SORT = "realm_sort";
+
     public static final int NOTIFICATION_ID = 0 ;
 
-    public static final String REALM_SORT = "realm_sort";
 }

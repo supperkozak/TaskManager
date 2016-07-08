@@ -23,8 +23,6 @@ import com.example.taskmanager.utils.SpeechRecognitionHelper;
 
 import java.util.ArrayList;
 
-import io.realm.Realm;
-
 public class AddTaskActivity extends AppCompatActivity {
     EditText mEdTaskName;
     EditText mEdTaskComment;
@@ -35,7 +33,6 @@ public class AddTaskActivity extends AppCompatActivity {
     TextInputLayout mInputLayoutComment;
 
     Task mTask;
-    private Realm mRealm;
 
     public MyAlertDialog mAlertDialog = new MyAlertDialog();
     public SpeechRecognitionHelper speechHelper = new SpeechRecognitionHelper();

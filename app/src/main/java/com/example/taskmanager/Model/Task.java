@@ -19,10 +19,10 @@ public class Task extends RealmObject implements Parcelable {
 
     public Task() {
         mId = Long.toString(System.currentTimeMillis());
-        mTimeTaskStart = "";
-        mTimeTaskFinish = "";
         mTaskName = "";
         mTaskComment = "";
+        mTimeTaskStart = "";
+        mTimeTaskFinish = "";
     }
 
     public Task(String taskName, String taskComment) {
