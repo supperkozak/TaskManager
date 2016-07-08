@@ -3,7 +3,13 @@ package com.example.taskmanager.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Task implements Parcelable {
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
+public class Task extends RealmObject implements Parcelable {
+    
+    @PrimaryKey
+    private String mId;
     private String mTaskName;
     private String mTaskComment;
     private String mTimeTaskStart;
@@ -12,20 +18,28 @@ public class Task implements Parcelable {
     private long mTimeTaskNotifikation;
 
     public Task() {
+        mId = Long.toString(System.currentTimeMillis());
         mTimeTaskStart = "";
+        mTimeTaskFinish = "";
+        mTaskName = "";
+        mTaskComment = "";
     }
 
     public Task(String taskName, String taskComment) {
+        mId = Long.toString(System.currentTimeMillis());
         mTaskName = taskName;
         mTaskComment = taskComment;
         mTimeTaskStart = "";
+        mTimeTaskFinish = "";
     }
 
     protected Task(Parcel in) {
+        mId = in.readString();
         mTaskName = in.readString();
         mTaskComment = in.readString();
         mTimeTaskStart = in.readString();
         mTimeTaskFinish = in.readString();
+        mTimeForToDo = in.readString();
         mTimeTaskNotifikation = in.readLong();
 
     }
@@ -49,10 +63,12 @@ public class Task implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mId);
         dest.writeString(mTaskName);
         dest.writeString(mTaskComment);
         dest.writeString(mTimeTaskStart);
         dest.writeString(mTimeTaskFinish);
+        dest.writeString(mTimeForToDo);
         dest.writeLong(mTimeTaskNotifikation);
 
     }
@@ -114,4 +130,13 @@ public class Task implements Parcelable {
     public void setTimeTaskNotifikation(long timeTaskNotifikation) {
         mTimeTaskNotifikation = timeTaskNotifikation;
     }
+
+    public String getID() {
+        return mId;
+    }
+
+    public void setID(String ID) {
+        mId = ID;
+    }
+
 }

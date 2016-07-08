@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         swipe:leftEdgeSwipeOffset="0dp"
-        swipe:rightEdgeSwipeOffset="50dp">
+        swipe:rightEdgeSwipeOffset="0dp">
         <LinearLayout
             android:id="@+id/swipe_delete"
             android:layout_width="match_parent"
@@ -85,7 +85,7 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="140dp"
+            android:layout_width="159dp"
             android:layout_height="match_parent"
             android:id="@+id/linearLayout">
 
@@ -105,6 +105,12 @@
                 android:text="@string/task_comment"
                 android:textColor="@color/white"
                 android:paddingLeft="15dp"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="10dp"
+                android:paddingTop="5dp"
+                android:paddingLeft="15dp">
 
             <TextView
                 android:id="@+id/tvTimeTaskStart"
@@ -112,7 +118,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/tvTimeTaskFinish"
                 android:textColor="@color/white"
-                android:paddingLeft="15dp"/>
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="true"/>
 
             <TextView
                 android:id="@+id/tvTimeTaskFinish"
@@ -120,13 +127,45 @@
                 android:layout_height="wrap_content"
                 android:text="@string/tvTimeTaskFinish"
                 android:textColor="@color/white"
-                android:paddingLeft="15dp"
-                android:paddingBottom="5dp"/>
+                android:paddingBottom="5dp"
+                android:layout_below="@+id/tvTimeTaskStart"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/button_start_task"
+                    android:background="@drawable/button_start_background"
+                    android:text="@string/start_task"
+                    android:layout_alignBottom="@+id/tvTimeTaskFinish"
+                    android:layout_centerInParent="true"
+                    android:visibility="invisible"
+                    android:clickable="false"
+                    android:layout_alignParentRight="false"
+                    android:layout_alignParentLeft="true"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/button_finish_task"
+                    android:text="@string/finish_task"
+                    android:layout_below="@+id/tvTimeTaskStart"
+                    android:background="@drawable/button_finish_background"
+                    android:layout_alignBottom="@+id/tvTimeTaskFinish"
+                    android:layout_alignRight="@+id/button_start_task"
+                    android:layout_alignEnd="@+id/button_start_task"
+                    android:layout_alignLeft="@+id/button_start_task"
+                    android:layout_alignStart="@+id/button_start_task"
+                    android:visibility="visible"
+                    android:clickable="false"
+                    />
+            </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="match_parent"
+            android:layout_width="431dp"
             android:layout_height="match_parent"
             android:id="@+id/linearLayout3"
             android:gravity="left">

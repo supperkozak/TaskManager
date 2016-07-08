@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         swipe:leftEdgeSwipeOffset="0dp"
-        swipe:rightEdgeSwipeOffset="50dp">
+        swipe:rightEdgeSwipeOffset="0dp">
         <LinearLayout
             android:id="@+id/swipe_delete"
             android:layout_width="match_parent"

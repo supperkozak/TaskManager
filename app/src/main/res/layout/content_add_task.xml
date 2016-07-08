@@ -13,8 +13,12 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_layout_task_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <EditText
+       <EditText
         android:id="@+id/edTaskName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,20 +26,55 @@
         android:maxLines="1"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_toLeftOf="@+id/button_voice_name"
+        android:layout_toStartOf="@+id/button_voice_name"/>
+    </android.support.design.widget.TextInputLayout>
 
-    <EditText
-        android:id="@+id/edTaskComment"
-        android:layout_below="@+id/edTaskName"
-        android:hint="@string/task_comment"
-        android:maxLines="3"
-        android:layout_width="wrap_content"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_layout_task_comment"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/input_layout_task_name"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentStart="true">
+
+        <EditText
+            android:id="@+id/edTaskComment"
+            android:layout_below="@+id/edTaskName"
+            android:hint="@string/task_comment"
+            android:maxLines="3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/button_voice_comment"
+            android:layout_toLeftOf="@+id/button_voice_comment"/>
+    </android.support.design.widget.TextInputLayout>
+
+
+
+
+
+    <ImageButton
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/button_voice_background"
+        android:src="@drawable/ic_action_av_mic"
+        android:id="@+id/button_voice_name"
+        android:layout_alignTop="@+id/edTaskName"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/edTaskName"/>
+
+    <ImageButton
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/button_voice_background"
+        android:src="@drawable/ic_action_av_mic"
+        android:id="@+id/button_voice_comment"
+        android:layout_below="@+id/input_layout_task_name"
+        android:layout_alignLeft="@+id/button_voice_name"
+        android:layout_alignStart="@+id/button_voice_name"/>
 
 </RelativeLayout>
 

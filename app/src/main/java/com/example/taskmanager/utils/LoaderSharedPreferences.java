@@ -10,12 +10,12 @@ import java.util.ArrayList;
 public class LoaderSharedPreferences implements Runnable {
     Thread thread;
     LoadCompleter loadCompleter;
-    SharedPreference sharedPreference;
+    RealmController sharedPreference;
     ArrayList<Task> mListTask;
     Context context;
 
     public LoaderSharedPreferences(Context context, LoadCompleter loadCompleter) throws InterruptedException {
-        sharedPreference = new SharedPreference();
+        sharedPreference = new RealmController();
         this.loadCompleter = loadCompleter;
         this.context = context;
         thread = new Thread(this, "Load SharedPreferences");
@@ -25,8 +25,8 @@ public class LoaderSharedPreferences implements Runnable {
 
 
     public void run() {
-        mListTask = sharedPreference.getTasksFromSharedPreferencesGSON(context);
-        loadCompleter.loadCallback(mListTask);
+       // mListTask = sharedPreference.getTasksFromSharedPreferencesGSON(context);
+        loadCompleter.loadCallback(sharedPreference);
 
     }
 }
