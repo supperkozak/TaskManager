@@ -1,8 +1,5 @@
 package com.example.taskmanager.activity;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.view.ActionMode;
 import android.view.View;
 import android.view.Menu;
@@ -23,28 +19,22 @@ import com.example.taskmanager.R;
 import com.example.taskmanager.adapter.RecyclerViewAdapter;
 import com.example.taskmanager.adapter.util.DividerItemDecoration;
 import com.example.taskmanager.constant.Constant;
-import com.example.taskmanager.interfases.LoadCompleter;
 import com.example.taskmanager.interfases.SetPositionLisener;
 import com.example.taskmanager.interfases.YesNoListener;
 import com.example.taskmanager.model.Task;
-import com.example.taskmanager.utils.LoaderSharedPreferences;
 import com.example.taskmanager.utils.MyAlertDialog;
+import com.example.taskmanager.utils.RealmController;
 import com.example.taskmanager.utils.SharedPreference;
-import com.example.taskmanager.utils.TaskNotification;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
+import io.realm.RealmResults;
 import jp.wasabeef.recyclerview.animators.FadeInLeftAnimator;
 
-public class MainActivity extends AppCompatActivity implements LoadCompleter, YesNoListener, SetPositionLisener {
+public class MainActivity extends AppCompatActivity implements YesNoListener, SetPositionLisener {
     Toolbar mToolbar;
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private RecyclerViewAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-
-    ArrayList<Task> mListTask;
+    private RealmController mRealm;
 
     private SharedPreference sharedPreference;
     ActionMode actionMode;
@@ -80,26 +70,13 @@ public class MainActivity extends AppCompatActivity implements LoadCompleter, Ye
             }
         });
 
+        mRealm = new RealmController();
         sharedPreference = new SharedPreference();
-        mListTask = new ArrayList<>();
 
-        LoaderSharedPreferences loader = null;
         if (savedInstanceState != null) {
-            mListTask = savedInstanceState.getParcelableArrayList(Constant.KEY_SAVE_STATE);
             mIsPopUmMenuVisible = savedInstanceState.getBoolean(Constant.KEY_SAVE_MENU_STATE, false);
-
-            initData();
-
-        } else {
-            // mListTask = sharedPreference.getTasksFromSharedPreferences(MainActivity.this);
-
-            try {
-                loader = new LoaderSharedPreferences(getApplicationContext(), this);
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
+        initData();
     }
 
     private void initData() {
@@ -111,26 +88,52 @@ public class MainActivity extends AppCompatActivity implements LoadCompleter, Ye
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getResources().getDrawable(R.drawable.divider)));
         mRecyclerView.setItemAnimator(new FadeInLeftAnimator());
 
-        mAdapter = new RecyclerViewAdapter(this, mListTask, this);
-        mRecyclerView.setAdapter(mAdapter);
+        updateAdapter();
+    }
 
+    public void updateAdapter() {
+
+        mAdapter = new RecyclerViewAdapter(this, sortData(), this);
+        mRecyclerView.setAdapter(mAdapter);
+        notifyAdapter();
+    }
+
+    private RealmResults <Task> sortData() {
+        int i = sharedPreference.getSortTypeFromPreferences(this, Constant.REALM_SORT);
+        RealmResults <Task> sortData = mRealm.getTasks();
+        switch (i) {
+            case 0:
+                sortData = mRealm.sortAscending(Constant.REALM_NAME);
+                break;
+
+            case 1:
+                sortData = mRealm.sortDescending(Constant.REALM_NAME);
+                break;
+
+            case 2:
+                sortData = mRealm.sortAscending(Constant.REALM_TIME_START);
+                break;
+
+            case 3:
+                sortData = mRealm.sortDescending(Constant.REALM_TIME_START);
+                break;
+        }
+        return sortData;
     }
 
     @Override
     public void setPosition(int position) {
-                Task mTask = mListTask.get(position);
+                Task mTask = mRealm.getTasks().get(position);
                 mListEditPosition = position;
                 Intent intent = new Intent(MainActivity.this, AddTaskActivity.class);
                 intent.putExtra(Task.class.getCanonicalName(), mTask);
                 startActivityForResult(intent, Constant.KEY_ADD_TASK);
-
-            }
+    }
 
     @Override
     public void notifyAdapter() {
         mAdapter.notifyDataSetChanged();
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -138,24 +141,19 @@ public class MainActivity extends AppCompatActivity implements LoadCompleter, Ye
             return;
         }
         if (resultCode == RESULT_OK) {
-            sharedPreference = new SharedPreference();
             switch (requestCode) {
                 case Constant.KEY_ADD_TASK:
                     Task mTask = data.getParcelableExtra(Task.class.getCanonicalName());
                     if (mListEditPosition == -1){
-                        mListTask.add(mTask);
-
+                        mRealm.copyToRealmOrUpdate(mTask);
                     } else {
-
-                        mListTask.set(mListEditPosition, mTask);
+                        mRealm.copyToRealmOrUpdate(mTask);
                         mListEditPosition = -1;
                     }
-                    sharedPreference.saveTasksToSharedPreferencesGSON(MainActivity.this, mListTask);
-                    mAdapter.notifyDataSetChanged();
+                    notifyAdapter();
                     break;
                 case Constant.KEY_SETTINGS:
-
-                    mAdapter.notifyDataSetChanged();
+                    notifyAdapter();
                     break;
             }
         } else {
@@ -166,16 +164,12 @@ public class MainActivity extends AppCompatActivity implements LoadCompleter, Ye
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(mListTask != null){
-            outState.putParcelableArrayList(Constant.KEY_SAVE_STATE, mListTask);
             outState.putBoolean(Constant.KEY_SAVE_MENU_STATE, mIsPopUmMenuVisible);
-        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        sharedPreference.saveTasksToSharedPreferencesGSON(MainActivity.this, mListTask);
     }
 
     @Override
@@ -192,7 +186,6 @@ public class MainActivity extends AppCompatActivity implements LoadCompleter, Ye
         PopupMenu popupMenu = new PopupMenu(this, v);
         popupMenu.inflate(R.menu.menu_main_sort);
         popupMenu.show();
-
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 
             @Override
@@ -200,43 +193,20 @@ public class MainActivity extends AppCompatActivity implements LoadCompleter, Ye
                 switch (item.getItemId()) {
 
                     case R.id.sort_task_by_name_az:
-                        Collections.sort(mListTask, new Comparator<Task>() {
-
-                            @Override
-                            public int compare(Task task1, Task task2) {
-                                return task1.getTaskName().compareTo(task2.getTaskName());
-                            }
-                        });
-                        mAdapter.notifyDataSetChanged();
+                        sharedPreference.putSortTypeToPreferences(MainActivity.this, Constant.REALM_SORT, 0);
+                        updateAdapter();
                         break;
                     case R.id.sort_task_by_name_za:
-                        Collections.sort(mListTask, new Comparator<Task>() {
-
-                            @Override
-                            public int compare(Task task2, Task task1) {
-                                return task1.getTaskName().compareTo(task2.getTaskName());
-                            }
-                        });
-                        mAdapter.notifyDataSetChanged();
+                        sharedPreference.putSortTypeToPreferences(MainActivity.this, Constant.REALM_SORT, 1);
+                        updateAdapter();
                         break;
                     case R.id.sort_task_by_date_first_yang:
-                        Collections.sort(mListTask, new Comparator<Task>() {
-
-                            @Override
-                            public int compare(Task task1, Task task2) {
-                                return task1.getTimeTaskStart().compareTo(task2.getTimeTaskStart());
-                            }
-                        });
-                        mAdapter.notifyDataSetChanged();
+                        sharedPreference.putSortTypeToPreferences(MainActivity.this, Constant.REALM_SORT, 2);
+                        updateAdapter();
                         break;
                     case R.id.sort_task_by_date_first_old:
-                        Collections.sort(mListTask, new Comparator<Task>() {
-                            @Override
-                            public int compare(Task task2, Task task1) {
-                                return task1.getTimeTaskStart().compareTo(task2.getTimeTaskStart());
-                            }
-                        });
-                        mAdapter.notifyDataSetChanged();
+                        sharedPreference.putSortTypeToPreferences(MainActivity.this, Constant.REALM_SORT, 3);
+                        updateAdapter();
                         break;
                 }
                 return false;
@@ -246,12 +216,18 @@ public class MainActivity extends AppCompatActivity implements LoadCompleter, Ye
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+
+
         switch (item.getItemId()) {
             case R.id.add_tasks:
                 double items;
                 int itemsCount;
-                if (mListTask.isEmpty()){
-                    addTask(0);
+                if (mRealm.getTasks().isEmpty()){
+
+                    if (mRecyclerView.getChildAt(0)==null){
+                    }
+
                     items = calculateListViewElements() * 3;
                     itemsCount = (int) Math.ceil(items);
                     for (int i = 1; i < itemsCount; i++) {
@@ -265,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements LoadCompleter, Ye
                     }
                 }
 
-                mAdapter.notifyDataSetChanged();
+                notifyAdapter();
                 Snackbar.make(mRecyclerView,getResources().getString(R.string.add_tasks_snack_1) + " " + itemsCount + " " +
                         getResources().getString(R.string.add_tasks_snack_2), Snackbar.LENGTH_LONG).show();
                 break;
@@ -284,7 +260,6 @@ public class MainActivity extends AppCompatActivity implements LoadCompleter, Ye
             case R.id.sort_tasks:
                 showPopupMenu(findViewById(R.id.sort_tasks));
                 setPopUmMenuVisible(true);
-
                 break;
 
             case R.id.add_task:
@@ -294,36 +269,20 @@ public class MainActivity extends AppCompatActivity implements LoadCompleter, Ye
             case R.id.action_settings:
                 startActivityForResult(new Intent(MainActivity.this, PreferencesActivity.class), Constant.KEY_SETTINGS);
                 break;
-
         }
         return true;
     }
 
-    @Override
-    public void loadCallback(ArrayList<Task> listTask) {
-        if (listTask == null) {
-            mListTask = new ArrayList<>();
-        } else {
-            mListTask = listTask;
-        }
-        initData();
-    }
-    public double calculateListViewElements(){
-        RecyclerViewAdapter recyclerAdapter = (RecyclerViewAdapter) mRecyclerView.getAdapter();
-        int dfs = 0;
 
-        if (!recyclerAdapter.isOpen(0)) {
-            View viewItem = null;
+    public double calculateListViewElements() {
 
-            viewItem.measure(0, 0);
-            double itemHighDp = viewItem.getMeasuredHeight();
-            double listViewHighPx = mRecyclerView.getHeight();
-            DisplayMetrics dm = new DisplayMetrics();
-            getWindowManager().getDefaultDisplay().getMetrics(dm);
-            double dpiScreen = dm.densityDpi;
-            double itemHighPx = itemHighDp * (dpiScreen / 160.0);
+        if (mRecyclerView.getChildAt(0)!=null) {
 
-            return listViewHighPx /(itemHighPx + 1);
+
+            double x = mRecyclerView.getChildAt(0).getHeight();
+            double y = mRecyclerView.getHeight();
+
+            return y/x;
 
         }else {
             return 0;
@@ -332,17 +291,20 @@ public class MainActivity extends AppCompatActivity implements LoadCompleter, Ye
 
     public void addTask(int i) {
         Task task = new Task();
-        task.setTaskName("" + i);
-        mListTask.add(task);
-        mAdapter.notifyDataSetChanged();
+        String[] firstWord = getResources().getStringArray(R.array.first_word);
+        String[] secondWord = getResources().getStringArray(R.array.second_word);
+        String[] thirdWord = getResources().getStringArray(R.array.third_word);
+        final String taskName = i + ". " + firstWord[(int)(Math.random()*firstWord.length)] + " "
+                + secondWord[(int)(Math.random()*secondWord.length)] + " "
+                + thirdWord[(int)(Math.random()*thirdWord.length)];
+        task.setTaskName(taskName);
+        mRealm.copyToRealmOrUpdate(task);
     }
 
     @Override
     public void onYesAlertDialog() {
-        sharedPreference.clearSharedPreference(this);
-        mListTask = new ArrayList<>();
-        initData();
-        mAdapter.notifyDataSetChanged();
+        mRealm.deleteAllFromRealm();
+        notifyAdapter();
     }
 
     @Override
@@ -352,7 +314,12 @@ public class MainActivity extends AppCompatActivity implements LoadCompleter, Ye
             super.onBackPressed();
         else
             Snackbar.make(mRecyclerView,R.string.snackbar_exit, Snackbar.LENGTH_LONG).show();
-
         back_pressed = System.currentTimeMillis();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mRealm.close();
     }
 }
